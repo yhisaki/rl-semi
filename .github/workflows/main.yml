@@ -1,28 +1,14 @@
-# This is a basic workflow to help you get started with Actions
+name: deploy-pages
 
-name: main
-
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [master]
-  pull_request:
-    branches: [master]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  build-and-deploy-book:
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout to master
         uses: actions/checkout@v2
         with:
@@ -38,7 +24,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r ./requirements.txt
 
-      - name: build documents
+      - name: Build the book
         run: |
           jupyter-book build .
 
@@ -46,23 +32,8 @@ jobs:
         run: |
           mv ./_build/html /tmp/docs
 
-      - name: Checkout to ghpages
-        uses: actions/checkout@v2
-        with:
-          ref: "gh-pages"
-
-      - name: Remove and Copy docs
-        run: |
-          rm -rf *
-          mv /tmp/docs/* .
-
-      - name: Push
-        env:
-          GITHUB_USER: "yhisaki"
-          GITHUB_EMAIL: "yhisaki31@gmail.com"
-        run: |
-          git config --local user.name "${GITHUB_USER}"
-          git config --local user.email "${GITHUB_EMAIL}"
-          git add .
-          git commit -m "pages build and deployment"
-          git push origin gh-pages
+    - name: GitHub Pages action
+      uses: peaceiris/actions-gh-pages@v3.6.1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: test/_build/html
