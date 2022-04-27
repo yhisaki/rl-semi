@@ -1,0 +1,5 @@
+jupyter-book
+matplotlib
+numpy
+gym
+gym-notebook-wrapper

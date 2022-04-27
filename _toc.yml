@@ -1,0 +1,12 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+
+parts:
+  - caption: Introduction
+    numbered: True
+    chapters:
+      - file: introduction/01what_is_rl.ipynb
+      - file: introduction/02value_function.ipynb
