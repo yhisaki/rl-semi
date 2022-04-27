@@ -1,0 +1,118 @@
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/jupyter_cache/executors/utils.py", line 51, in single_nb_execution
+    executenb(
+  File "/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/nbclient/client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/asyncio/base_events.py", line 616, in run_until_complete
+    return future.result()
+  File "/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/nbclient/client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+import gnwrapper
+import gym
+
+
+env = gnwrapper.LoopAnimation(gym.make("CartPole-v1"))  # 環境を作成
+
+# 状態に関わらずランダムな行動を選択する方策
+def policy(state):
+    return env.action_space.sample()
+
+
+gamma = 0.99  # 割引率
+r_sum = 0  # 割引累積報酬
+t = 0  # 時刻ステップ
+
+state = env.reset()  # 初期化
+
+while True:
+    action = policy(state)  # 状態から行動を選択
+    next_state, reward, done, info = env.step(action)  # 行動を実行して(次の状態，報酬，終了判定，その他情報)を観測
+
+    r_sum += (gamma**t) * reward
+
+    env.render()  # 描画
+
+    state = next_state  # 状態を更新
+    if done:
+        break
+
+print(f"Discounted Cumulative Reward : {r_sum}")
+
+env.display()
+
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
+Input [0;32mIn [1][0m, in [0;36m<cell line: 5>[0;34m()[0m
+[1;32m      1[0m [38;5;28;01mimport[39;00m [38;5;21;01mgnwrapper[39;00m
+[1;32m      2[0m [38;5;28;01mimport[39;00m [38;5;21;01mgym[39;00m
+[0;32m----> 5[0m env [38;5;241m=[39m gnwrapper[38;5;241m.[39mLoopAnimation([43mgym[49m[38;5;241;43m.[39;49m[43mmake[49m[43m([49m[38;5;124;43m"[39;49m[38;5;124;43mCartPole-v1[39;49m[38;5;124;43m"[39;49m[43m)[49m)  [38;5;66;03m# 環境を作成[39;00m
+[1;32m      7[0m [38;5;66;03m# 状態に関わらずランダムな行動を選択する方策[39;00m
+[1;32m      8[0m [38;5;28;01mdef[39;00m [38;5;21mpolicy[39m(state):
+
+File [0;32m/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/gym/envs/registration.py:676[0m, in [0;36mmake[0;34m(id, **kwargs)[0m
+[1;32m    675[0m [38;5;28;01mdef[39;00m [38;5;21mmake[39m([38;5;28mid[39m: [38;5;28mstr[39m, [38;5;241m*[39m[38;5;241m*[39mkwargs) [38;5;241m-[39m[38;5;241m>[39m [38;5;124m"[39m[38;5;124mEnv[39m[38;5;124m"[39m:
+[0;32m--> 676[0m     [38;5;28;01mreturn[39;00m [43mregistry[49m[38;5;241;43m.[39;49m[43mmake[49m[43m([49m[38;5;28;43mid[39;49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m
+
+File [0;32m/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/gym/envs/registration.py:520[0m, in [0;36mEnvRegistry.make[0;34m(self, path, **kwargs)[0m
+[1;32m    518[0m spec [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mspec(path)
+[1;32m    519[0m [38;5;66;03m# Construct the environment[39;00m
+[0;32m--> 520[0m [38;5;28;01mreturn[39;00m [43mspec[49m[38;5;241;43m.[39;49m[43mmake[49m[43m([49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m
+
+File [0;32m/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/gym/envs/registration.py:139[0m, in [0;36mEnvSpec.make[0;34m(self, **kwargs)[0m
+[1;32m    137[0m     env [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mentry_point([38;5;241m*[39m[38;5;241m*[39m_kwargs)
+[1;32m    138[0m [38;5;28;01melse[39;00m:
+[0;32m--> 139[0m     [38;5;28mcls[39m [38;5;241m=[39m [43mload[49m[43m([49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mentry_point[49m[43m)[49m
+[1;32m    140[0m     env [38;5;241m=[39m [38;5;28mcls[39m([38;5;241m*[39m[38;5;241m*[39m_kwargs)
+[1;32m    142[0m [38;5;66;03m# Make the environment aware of which spec it came from.[39;00m
+
+File [0;32m/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/gym/envs/registration.py:55[0m, in [0;36mload[0;34m(name)[0m
+[1;32m     53[0m [38;5;28;01mdef[39;00m [38;5;21mload[39m(name: [38;5;28mstr[39m) [38;5;241m-[39m[38;5;241m>[39m Type:
+[1;32m     54[0m     mod_name, attr_name [38;5;241m=[39m name[38;5;241m.[39msplit([38;5;124m"[39m[38;5;124m:[39m[38;5;124m"[39m)
+[0;32m---> 55[0m     mod [38;5;241m=[39m [43mimportlib[49m[38;5;241;43m.[39;49m[43mimport_module[49m[43m([49m[43mmod_name[49m[43m)[49m
+[1;32m     56[0m     fn [38;5;241m=[39m [38;5;28mgetattr[39m(mod, attr_name)
+[1;32m     57[0m     [38;5;28;01mreturn[39;00m fn
+
+File [0;32m/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/importlib/__init__.py:127[0m, in [0;36mimport_module[0;34m(name, package)[0m
+[1;32m    125[0m             [38;5;28;01mbreak[39;00m
+[1;32m    126[0m         level [38;5;241m+[39m[38;5;241m=[39m [38;5;241m1[39m
+[0;32m--> 127[0m [38;5;28;01mreturn[39;00m [43m_bootstrap[49m[38;5;241;43m.[39;49m[43m_gcd_import[49m[43m([49m[43mname[49m[43m[[49m[43mlevel[49m[43m:[49m[43m][49m[43m,[49m[43m [49m[43mpackage[49m[43m,[49m[43m [49m[43mlevel[49m[43m)[49m
+
+File [0;32m<frozen importlib._bootstrap>:1014[0m, in [0;36m_gcd_import[0;34m(name, package, level)[0m
+
+File [0;32m<frozen importlib._bootstrap>:991[0m, in [0;36m_find_and_load[0;34m(name, import_)[0m
+
+File [0;32m<frozen importlib._bootstrap>:975[0m, in [0;36m_find_and_load_unlocked[0;34m(name, import_)[0m
+
+File [0;32m<frozen importlib._bootstrap>:671[0m, in [0;36m_load_unlocked[0;34m(spec)[0m
+
+File [0;32m<frozen importlib._bootstrap_external>:843[0m, in [0;36mexec_module[0;34m(self, module)[0m
+
+File [0;32m<frozen importlib._bootstrap>:219[0m, in [0;36m_call_with_frames_removed[0;34m(f, *args, **kwds)[0m
+
+File [0;32m/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/gym/envs/classic_control/__init__.py:1[0m, in [0;36m<module>[0;34m[0m
+[0;32m----> 1[0m [38;5;28;01mfrom[39;00m [38;5;21;01mgym[39;00m[38;5;21;01m.[39;00m[38;5;21;01menvs[39;00m[38;5;21;01m.[39;00m[38;5;21;01mclassic_control[39;00m[38;5;21;01m.[39;00m[38;5;21;01mcartpole[39;00m [38;5;28;01mimport[39;00m CartPoleEnv
+[1;32m      2[0m [38;5;28;01mfrom[39;00m [38;5;21;01mgym[39;00m[38;5;21;01m.[39;00m[38;5;21;01menvs[39;00m[38;5;21;01m.[39;00m[38;5;21;01mclassic_control[39;00m[38;5;21;01m.[39;00m[38;5;21;01mmountain_car[39;00m [38;5;28;01mimport[39;00m MountainCarEnv
+[1;32m      3[0m [38;5;28;01mfrom[39;00m [38;5;21;01mgym[39;00m[38;5;21;01m.[39;00m[38;5;21;01menvs[39;00m[38;5;21;01m.[39;00m[38;5;21;01mclassic_control[39;00m[38;5;21;01m.[39;00m[38;5;21;01mcontinuous_mountain_car[39;00m [38;5;28;01mimport[39;00m Continuous_MountainCarEnv
+
+File [0;32m/opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/gym/envs/classic_control/cartpole.py:10[0m, in [0;36m<module>[0;34m[0m
+[1;32m      7[0m [38;5;28;01mfrom[39;00m [38;5;21;01mtyping[39;00m [38;5;28;01mimport[39;00m Optional, Union
+[1;32m      9[0m [38;5;28;01mimport[39;00m [38;5;21;01mnumpy[39;00m [38;5;28;01mas[39;00m [38;5;21;01mnp[39;00m
+[0;32m---> 10[0m [38;5;28;01mimport[39;00m [38;5;21;01mpygame[39;00m
+[1;32m     11[0m [38;5;28;01mfrom[39;00m [38;5;21;01mpygame[39;00m [38;5;28;01mimport[39;00m gfxdraw
+[1;32m     13[0m [38;5;28;01mimport[39;00m [38;5;21;01mgym[39;00m
+
+[0;31mModuleNotFoundError[0m: No module named 'pygame'
+ModuleNotFoundError: No module named 'pygame'
+

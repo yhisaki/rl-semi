@@ -1,0 +1,492 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>1. 強化学習とは &#8212; 強化学習新人ゼミ2022</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="2. 価値関数" href="02value_function.html" />
+    <link rel="prev" title="はじめに" href="../intro.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">強化学習新人ゼミ2022</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../intro.html">
+   はじめに
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Introduction
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   1. 強化学習とは
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02value_function.html">
+   2. 価値関数
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/introduction/01what_is_rl.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/executablebooks/jupyter-book"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fintroduction/01what_is_rl.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/docs/introduction/01what_is_rl.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   1.1. 対象とする問題
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     1.1.1. プログラムによるシミュレーション
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   1.2. 強化学習アルゴリズム
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>強化学習とは</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   1.1. 対象とする問題
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     1.1.1. プログラムによるシミュレーション
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   1.2. 強化学習アルゴリズム
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
+<h1><span class="section-number">1. </span>強化学習とは<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="math notranslate nohighlight">
+\[\newcommand{\E}{{\mathrm E}}
+\newcommand{\underE}[2]{\underset{\begin{subarray}{c}#1 \end{subarray}}{\E}\left[ #2 \right]}
+\newcommand{\Epi}[1]{\underset{\begin{subarray}{c}\tau \sim \pi \end{subarray}}{\E}\left[ #1 \right]}\]</div>
+<div class="section" id="id2">
+<h2><span class="section-number">1.1. </span>対象とする問題<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>強化学習は学習主体が制御対象との相互作用をもとに学習し，目標を達成するための枠組みです．
+学習主体は <strong>エージェント(Agent)</strong> と呼ばれ，制御対象は <strong>環境(Environment)</strong> と呼ばれます．
+制御対象の環境は，一般的に <strong>マルコフ決定過程(Markov decision process; MDP)</strong> で定式化されます．
+マルコフ決定過程は<span class="math notranslate nohighlight">\((\mathcal{S}, \mathcal{A}, p, r, p_0)\)</span>で定義され，以下に各要素を列挙します．</p>
+<ul>
+<li><p>状態空間(State Space): <span class="math notranslate nohighlight">\(\mathcal{S} \ni s\)</span></p></li>
+<li><p>行動空間(Action Space): <span class="math notranslate nohighlight">\(\mathcal{A} \ni a\)</span></p></li>
+<li><p>状態遷移確率分布関数: <span class="math notranslate nohighlight">\(p: \mathcal{S} \times \mathcal{S} \times \mathcal{A} \rightarrow [0, 1]\)</span>:</p>
+<p><span class="math notranslate nohighlight">\(p(s'|s, a) := \Pr(S_{t+1} = s'| S_{t} = s, A_t = a),\ \ \ \forall t \in \mathbb{N}_0.\)</span></p>
+</li>
+<li><p>報酬関数(Reward Function): <span class="math notranslate nohighlight">\(r: \mathcal{S} \times \mathcal{A} \rightarrow [r_{\text{min}}, r_{\text{max}}]\)</span></p></li>
+<li><p>初期状態確率分布関数(Initial State Distribution): <span class="math notranslate nohighlight">\(p_0: \mathcal{S}  \rightarrow [0, 1]:p_0(s) := \Pr(S_0 = s)\)</span></p></li>
+</ul>
+<p>次に，マルコフ決定過程への入力となる行動を決定するルールである <strong>方策(Policy)</strong> 定義します．
+方策には様々な形のものがありますが，本書では <strong>確率的方策(Stochastic policy) <span class="math notranslate nohighlight">\(\pi : \mathcal{A} \times \mathcal{S} \rightarrow [0,1]\)</span></strong> と <strong>決定的方策(Determinstic policy) <span class="math notranslate nohighlight">\(\mu : \mathcal{S} \rightarrow \mathcal{A}\)</span></strong> の 2 種類を取り扱います．
+確率的方策は，ある状態のもとである行動を選択する確率を表す関数<span class="math notranslate nohighlight">\(\pi(a|s) := \text{Pr}(A=a, S=s)\)</span>で表され，
+決定的方策は，ある状態のもとで選択する行動を表す関数<span class="math notranslate nohighlight">\(a = \mu(s)\)</span>で表されます．</p>
+<p>これら環境や方策に対して，強化学習は一般的に目的関数と呼ばれる方策を評価する関数を定義し，それを最大化する方策を求める問題と言えます．
+目的関数としては典型的に <strong>期待割引累積報酬(expected discounted cumulative reward)</strong> が用いられます．</p>
+<div class="math notranslate nohighlight">
+\[\underE{\pi}{\lim_{T \rightarrow \infty} \sum_{t=0}^{T} \gamma^t R_t } \]</div>
+<p>ここで，割引率<span class="math notranslate nohighlight">\(\gamma\)</span>は<span class="math notranslate nohighlight">\(0 &lt; \gamma \geq 1\)</span>のパラメータです．マルコフ過程が時間的に無限に続く際，累積報酬を有限の値に収める役割があります．</p>
+<div class="section" id="id3">
+<h3><span class="section-number">1.1.1. </span>プログラムによるシミュレーション<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>本節では，強化学習が対象とする問題のシミュレーションを行います．
+シミュレーションには Python ライブラリの一つである<a class="reference external" href="https://github.com/openai/gym">OpenAI Gym</a>を用います．
+このライブラリには，<a class="reference external" href="https://www.gymlibrary.ml/">様々な環境</a>が実装されているのですが，今回は基本的な問題の一つである<a class="reference external" href="https://www.gymlibrary.ml/environments/classic_control/cart_pole/">Cart Pole</a>を用います．</p>
+<p>この問題で行動は，0:cart を左に押す/1:cart を右に押す，の二種類で，状態は cart の位置/速度，pole の角度/角速度を表す 4 次元の実数値ベクトルとなります．報酬は pole が倒れていなかったら各時間ステップで 1 得られます．</p>
+<p>以下のプログラムは，方策を状態に関わらずランダムとして動かした時の様子の動画と，割引率を 0.99 とした際の割引累積報酬を出力するものです．</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gnwrapper</span>
+<span class="kn">import</span> <span class="nn">gym</span>
+
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gnwrapper</span><span class="o">.</span><span class="n">LoopAnimation</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;CartPole-v1&quot;</span><span class="p">))</span>  <span class="c1"># 環境を作成</span>
+
+<span class="c1"># 状態に関わらずランダムな行動を選択する方策</span>
+<span class="k">def</span> <span class="nf">policy</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+
+
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.99</span>  <span class="c1"># 割引率</span>
+<span class="n">r_sum</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 割引累積報酬</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 時刻ステップ</span>
+
+<span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>  <span class="c1"># 初期化</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="n">policy</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>  <span class="c1"># 状態から行動を選択</span>
+    <span class="n">next_state</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>  <span class="c1"># 行動を実行して(次の状態，報酬，終了判定，その他情報)を観測</span>
+
+    <span class="n">r_sum</span> <span class="o">+=</span> <span class="p">(</span><span class="n">gamma</span><span class="o">**</span><span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">reward</span>
+
+    <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>  <span class="c1"># 描画</span>
+
+    <span class="n">state</span> <span class="o">=</span> <span class="n">next_state</span>  <span class="c1"># 状態を更新</span>
+    <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+        <span class="k">break</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Discounted Cumulative Reward : </span><span class="si">{</span><span class="n">r_sum</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">env</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="nn">Input In [1],</span> in <span class="ni">&lt;cell line: 5&gt;</span><span class="nt">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span> <span class="nn">gnwrapper</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">gym</span>
+<span class="ne">----&gt; </span><span class="mi">5</span> <span class="n">env</span> <span class="o">=</span> <span class="n">gnwrapper</span><span class="o">.</span><span class="n">LoopAnimation</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;CartPole-v1&quot;</span><span class="p">))</span>  <span class="c1"># 環境を作成</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="c1"># 状態に関わらずランダムな行動を選択する方策</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="k">def</span> <span class="nf">policy</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/gym/envs/registration.py:676,</span> in <span class="ni">make</span><span class="nt">(id, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">675</span> <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Env&quot;</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">676</span>     <span class="k">return</span> <span class="n">registry</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/gym/envs/registration.py:520,</span> in <span class="ni">EnvRegistry.make</span><span class="nt">(self, path, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">518</span> <span class="n">spec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">519</span> <span class="c1"># Construct the environment</span>
+<span class="ne">--&gt; </span><span class="mi">520</span> <span class="k">return</span> <span class="n">spec</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/gym/envs/registration.py:139,</span> in <span class="ni">EnvSpec.make</span><span class="nt">(self, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">137</span>     <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entry_point</span><span class="p">(</span><span class="o">**</span><span class="n">_kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">138</span> <span class="k">else</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">139</span>     <span class="bp">cls</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_point</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">140</span>     <span class="n">env</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">_kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">142</span> <span class="c1"># Make the environment aware of which spec it came from.</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/site-packages/gym/envs/registration.py:55,</span> in <span class="ni">load</span><span class="nt">(name)</span>
+<span class="g g-Whitespace">     </span><span class="mi">53</span> <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">54</span>     <span class="n">mod_name</span><span class="p">,</span> <span class="n">attr_name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">55</span>     <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">mod_name</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">56</span>     <span class="n">fn</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">57</span>     <span class="k">return</span> <span class="n">fn</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.8.12/x64/lib/python3.8/importlib/__init__.py:127,</span> in <span class="ni">import_module</span><span class="nt">(name, package)</span>
+<span class="g g-Whitespace">    </span><span class="mi">125</span>             <span class="k">break</span>
+<span class="g g-Whitespace">    </span><span class="mi">126</span>         <span class="n">level</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="ne">--&gt; </span><span class="mi">127</span> <span class="k">return</span> <span class="n">_bootstrap</span><span class="o">.</span><span class="n">_gcd_import</span><span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="n">level</span><span class="p">:],</span> <span class="n">package</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+
+<span class="nn">File &lt;frozen importlib._bootstrap&gt;:1014,</span> in <span class="ni">_gcd_import</span><span class="nt">(name, package, level)</span>
+
+<span class="nn">File &lt;frozen importlib._bootstrap&gt;:991,</span> in <span class="ni">_find_and_load</span><span class="nt">(name, import_)</span>
+
+<span class="nn">File &lt;frozen importlib._bootstrap&gt;:975,</span> in <span class="ni">_find_and_load_unlocked</span><span class="nt">(name, import_)</span>
+
+<span class="nn">File &lt;frozen importlib._bootstrap&gt;:671,</span> in <span class="ni">_load_unlocked</span><span class="nt">(spec)</span>
+
+<span class="nn">File &lt;frozen importlib._bootstrap_external&gt;:843,</span> in <span class="ni">exec_module</span><span class="nt">(self, module)</span>
+
+<span class="nn">File &lt;frozen importlib._bootstrap&gt;:219,</span> in <span class="ni">_call_with_frames_removed</span><span class="nt">(f, *args, **kwds)</span>
+
+<span class="n">File</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">hostedtoolcache</span><span class="o">/</span><span class="n">Python</span><span class="o">/</span><span class="mf">3.8.12</span><span class="o">/</span><span class="n">x64</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.8</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">gym</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">classic_control</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">gym.envs.classic_control.cartpole</span> <span class="kn">import</span> <span class="n">CartPoleEnv</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">from</span> <span class="nn">gym.envs.classic_control.mountain_car</span> <span class="kn">import</span> <span class="n">MountainCarEnv</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span> <span class="nn">gym.envs.classic_control.continuous_mountain_car</span> <span class="kn">import</span> <span class="n">Continuous_MountainCarEnv</span>
+
+<span class="n">File</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">hostedtoolcache</span><span class="o">/</span><span class="n">Python</span><span class="o">/</span><span class="mf">3.8.12</span><span class="o">/</span><span class="n">x64</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.8</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">gym</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">classic_control</span><span class="o">/</span><span class="n">cartpole</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="ne">---&gt; </span><span class="mi">10</span> <span class="kn">import</span> <span class="nn">pygame</span>
+<span class="g g-Whitespace">     </span><span class="mi">11</span> <span class="kn">from</span> <span class="nn">pygame</span> <span class="kn">import</span> <span class="n">gfxdraw</span>
+<span class="g g-Whitespace">     </span><span class="mi">13</span> <span class="kn">import</span> <span class="nn">gym</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;pygame&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2><span class="section-number">1.2. </span>強化学習アルゴリズム<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p><img alt="" src="../_images/rlalgorithm.png" />
+<em><a class="reference external" href="http://rail.eecs.berkeley.edu/deeprlcourse-fa20/%5D">UCBの授業資料: lecture4</a>より</em></p>
+<p>強化学習には様々なアルゴリズムがありますが，一般的には上図のような3ステップを繰り返し，方策を更新していきます．</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./introduction"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="../intro.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">はじめに</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="02value_function.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>価値関数</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By Yukinari Hisaki<br/>
+    
+        &copy; Copyright 2021.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>
