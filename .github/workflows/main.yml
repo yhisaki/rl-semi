@@ -28,10 +28,6 @@ jobs:
         run: |
           jupyter-book build .
 
-      - name: Copy docs to tmp
-        run: |
-          mv ./_build/html /tmp/docs
-
       - name: GitHub Pages action
         uses: peaceiris/actions-gh-pages@v3.6.1
         with:
