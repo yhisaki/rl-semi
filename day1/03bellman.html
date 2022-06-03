@@ -28,6 +28,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
@@ -192,6 +193,23 @@ const thebe_selector_output = ".output, .cell_output"
 
             <!-- Launch buttons -->
 
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/docs/day1/03bellman.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="発売 Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
         </div>
 
         <!-- Table of contents -->
@@ -206,6 +224,18 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal nav-link" href="#id2">
    3.1. ベルマン方程式
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     3.1.1. ベルマン作用素
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     3.1.2. 実装
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -231,6 +261,18 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal nav-link" href="#id2">
    3.1. ベルマン方程式
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     3.1.1. ベルマン作用素
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     3.1.2. 実装
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -243,14 +285,311 @@ const thebe_selector_output = ".output, .cell_output"
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="id1">
 <h1><span class="section-number">3. </span>ベルマン方程式<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>本章，価値関数/行動価値関数が満たす再帰的な性質を基にした <strong>ベルマン方程式</strong> を紹介します．
-この方程式は，現在の状態の価値<span class="math notranslate nohighlight">\(V(S_t)\)</span>と次の状態の価値<span class="math notranslate nohighlight">\(V(S_{t+1})\)</span>の関係に着目することにより得られる方程式で，
+<div class="math notranslate nohighlight">
+\[\newcommand{\E}{{\mathrm E}}
+\newcommand{\underE}[2]{\underset{\begin{subarray}{c}#1 \end{subarray}}{\E}\left[ #2 \right]}
+\newcommand{\Epi}[1]{\underset{\begin{subarray}{c}\tau \sim \pi \end{subarray}}{\E}\left[ #1 \right]}\]</div>
+<p>本章では，価値関数/行動価値関数が満たす再帰的な性質を基にした <strong>ベルマン方程式(Bellman equation)</strong> を紹介します．
+この方程式は，現在の状態<span class="math notranslate nohighlight">\(s\)</span>の価値<span class="math notranslate nohighlight">\(V(s)\)</span>と次の状態<span class="math notranslate nohighlight">\(s'\)</span>の価値<span class="math notranslate nohighlight">\(V(s')\)</span>の関係に着目することにより得られる方程式で，
 様々な強化学習アルゴリズムで利用されています．</p>
 <div class="section" id="id2">
 <h2><span class="section-number">3.1. </span>ベルマン方程式<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<p>価値関数/行動価値関数に関するベルマン方程式は以下のようになります．</p>
+<p>価値関数の定義式<a class="reference internal" href="02value_function.html#equation-vpi-difinition">(2.1)</a>と<span class="math notranslate nohighlight">\(G_t\)</span>に関する再帰的な式<a class="reference internal" href="02value_function.html#equation-g-t-recursion">(2.4)</a>より以下のような式変形が行えます．</p>
+<div class="math notranslate nohighlight" id="equation-v-expansion">
+<span class="eqno">(3.1)<a class="headerlink" href="#equation-v-expansion" title="Permalink to this equation">¶</a></span>\[\begin{split}
+V^\pi(s) &amp;= \underE{\pi}{G_t | S_t = s}\\
+&amp;= \underE{\pi}{R_t + \gamma G_{t+1} | S_t = s}\\
+&amp;= \sum_{a \in \mathcal{A}} \pi(a|s) \left(r(s, a) + \gamma  \sum_{s' \in \mathcal{S}}  p(s'|s,a) \underE{\pi}{ G_{t+1} | S_{t+1} = s' }\right)\\
+&amp;= \sum_{a \in \mathcal{A}} \pi(a|s) \left( r(s,a) + \gamma \sum_{s' \in \mathcal{S}}  p(s'|s,a)V^\pi(s')  \right), \forall s \in \mathcal{S}
+\end{split}\]</div>
+<p>この式変形は直感的に，「現在の状態の価値 ＝ （即時報酬 ＋ 次の状態の価値）の期待値」としたものであると捉えることが出来ます．</p>
+<p>同様の式変形を行動価値関数に関しても適用できます．</p>
+<div class="math notranslate nohighlight" id="equation-q-expansion">
+<span class="eqno">(3.2)<a class="headerlink" href="#equation-q-expansion" title="Permalink to this equation">¶</a></span>\[\begin{split}Q^\pi(s,a) &amp;= \underE{\pi}{G_t | S_t = s, A_t = a}\\
+&amp;= \underE{\pi}{R_t + \gamma G_{t+1} | S_t = s, A_t = a}\\
+&amp;= r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) \sum_{a' \in \mathcal{A}} \pi(a'|s') Q^\pi(s', a'), \forall s \in \mathcal{S}, a \in \mathcal{A}\end{split}\]</div>
+<p>これらの式変形より，<span class="math notranslate nohighlight">\(V^\pi\)</span>は関数<span class="math notranslate nohighlight">\(v : \mathcal{S} \rightarrow \mathbb{R}\)</span>に関する方程式</p>
+<div class="math notranslate nohighlight" id="equation-bellman-v">
+<span class="eqno">(3.3)<a class="headerlink" href="#equation-bellman-v" title="Permalink to this equation">¶</a></span>\[v(s)
+=\sum_{a \in \mathcal{A}} \pi(a|s) \left( r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a)v(s') \right), \forall s \in \mathcal{S}\]</div>
+<p>の解であることがわかり，
+<span class="math notranslate nohighlight">\(Q^\pi\)</span>は関数<span class="math notranslate nohighlight">\(q : \mathcal{S} \times \mathcal{A} \rightarrow \mathbb{R}\)</span>に関する方程式</p>
+<div class="math notranslate nohighlight" id="equation-bellman-q">
+<span class="eqno">(3.4)<a class="headerlink" href="#equation-bellman-q" title="Permalink to this equation">¶</a></span>\[q(s,a)
+= r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) \sum_{a' \in \mathcal{A}} \pi(a'|s') q(s', a'), \forall s \in \mathcal{S}, a \in \mathcal{A}\]</div>
+<p>の解であることがわかります．
+方程式<a class="reference internal" href="#equation-bellman-v">(3.3)</a>,<a class="reference internal" href="#equation-bellman-q">(3.4)</a>はベルマン方程式と呼ばれています．</p>
+<p>これらの方程式の嬉しいところは，
+環境が既知であるならば，
+<font color='red'><span class="math notranslate nohighlight">\(V^\pi,Q^\pi\)</span>を求める問題を方程式<a class="reference internal" href="#equation-bellman-v">(3.3)</a>,<a class="reference internal" href="#equation-bellman-q">(3.4)</a>の解を求める問題と捉えることが出来る</font>ことです．</p>
+<p>また，式<a class="reference internal" href="02value_function.html#equation-vpi-qpi-relation">(2.3)</a>の結果と式<a class="reference internal" href="#equation-q-expansion">(3.2)</a>より</p>
+<div class="math notranslate nohighlight" id="equation-vpi-qpi-relation2">
+<span class="eqno">(3.5)<a class="headerlink" href="#equation-vpi-qpi-relation2" title="Permalink to this equation">¶</a></span>\[\begin{split}Q^\pi(s,a) &amp;= r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) \sum_{a' \in \mathcal{A}} \pi(a'|s') Q^\pi(s', a')\\
+&amp; = r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) V^\pi(s'), \forall s \in \mathcal{S}, a \in \mathcal{A}\end{split}\]</div>
+<p>が成り立つ，つまり，<span class="math notranslate nohighlight">\(V^\pi\)</span>が求まれば<span class="math notranslate nohighlight">\(Q^\pi\)</span>も求まるため本節では主に価値関数についてのみ扱います．</p>
+<div class="section" id="id3">
+<h3><span class="section-number">3.1.1. </span>ベルマン作用素<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>ベルマン方程式をより深く分析するため，ベルマン方程式を基にした <strong>ベルマン作用素(Bellman operator)</strong> というものを導入します．</p>
+<p>ベルマン作用素は，ある関数<span class="math notranslate nohighlight">\(v : \mathcal{S} \rightarrow \mathbb{R}\)</span>に対する写像<span class="math notranslate nohighlight">\(B_\pi: \mathbb{R}^{|\mathcal{S}|} \rightarrow \mathbb{R}^{|\mathcal{S}|}\)</span>であり，</p>
 <div class="math notranslate nohighlight">
-\[V\]</div>
+\[(B_\pi(v))(s) := \sum_{a \in \mathcal{A}} \pi(a|s) \left( r(s,a) + \gamma \sum_{s' \in \mathcal{S}}  p(s'|s,a)v(s')  \right), \forall s \in \mathcal{S}\]</div>
+<p>と定義されます．</p>
+<p>このベルマン作用素を用いて，式<a class="reference internal" href="#equation-bellman-v">(3.3)</a>のベルマン方程式を以下のように書き表せます．</p>
+<div class="math notranslate nohighlight">
+\[v = B_\pi(v), \forall s \in \mathcal{S}\]</div>
+<p>このように，ある作用素に対して<span class="math notranslate nohighlight">\(v = B(v)\)</span>のような関係を成り立たせる<span class="math notranslate nohighlight">\(v\)</span>を<strong>不動点(fixed-point)</strong> と呼びます．</p>
+<p>また，この作用素は同じ関数に k 回適用した場合，つまり<span class="math notranslate nohighlight">\(B( \cdots B(B(v)))\)</span>とした場合<span class="math notranslate nohighlight">\(B^k(v)\)</span>のように表記します．</p>
+<p>このベルマン作用素に対して以下の命題が成り立ちます．</p>
+<div class="proof proposition admonition" id="b_pi_convergence">
+<p class="admonition-title"><span class="caption-number">Proposition 3.1 </span> (<span class="math notranslate nohighlight">\(B_\pi\)</span>の収束性)</p>
+<div class="proposition-content section" id="proof-content">
+<p>任意の有界関数<span class="math notranslate nohighlight">\(v:\mathcal{S} \rightarrow \mathbb{R}\)</span>に対して，ベルマン作用素<span class="math notranslate nohighlight">\(B_\pi\)</span>を繰り返し適用した関数<span class="math notranslate nohighlight">\((B_\pi^k v)\)</span>は価値関数<span class="math notranslate nohighlight">\(V^\pi\)</span>に漸近的に等しくなる．</p>
+<div class="math notranslate nohighlight">
+\[V^\pi(s) = \lim_{k\rightarrow \infty} (B_\pi^k(v))(s), \forall s \in \mathcal{S}\]</div>
+</div>
+</div><div class="proof proposition admonition" id="b_pi_fixed_point">
+<p class="admonition-title"><span class="caption-number">Proposition 3.2 </span> (<span class="math notranslate nohighlight">\(B_\pi\)</span>の不動点の一意性)</p>
+<div class="proposition-content section" id="proof-content">
+<p>以下のベルマン方程式</p>
+<div class="math notranslate nohighlight">
+\[v = B_\pi(v), \forall s \in \mathcal{S}\]</div>
+<p>を満たす解は価値関数<span class="math notranslate nohighlight">\(V^\pi\)</span>ただ一つである．</p>
+</div>
+</div><p>これらの命題より，環境の情報が既知である場合</p>
+<ol class="simple" id="solve-bellman-operator">
+<li><p><a class="reference internal" href="#b_pi_convergence">Proposition 3.1</a>より，任意の関数<span class="math notranslate nohighlight">\(v\)</span>に対して<span class="math notranslate nohighlight">\(B_\pi\)</span>を繰り返し適用する</p></li>
+<li><p><a class="reference internal" href="#b_pi_fixed_point">Proposition 3.2</a><span class="math notranslate nohighlight">\(より，v = B_\pi(v), \forall s \in \mathcal{S}\)</span>を直接解く</p></li>
+</ol>
+<p>の2通り方法で<span class="math notranslate nohighlight">\(V^\pi\)</span>を得ることが出来ます．</p>
+</div>
+<div class="section" id="id4">
+<h3><span class="section-number">3.1.2. </span>実装<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>本節では，前節のコンセプトを基にした手法の実装を示し，
+実際に<a class="reference external" href="https://www.gymlibrary.ml/environments/toy_text/frozen_lake/">FrozenLake</a>環境に適用してみます．</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gym</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
+    <span class="s2">&quot;FrozenLake-v1&quot;</span><span class="p">,</span>
+    <span class="n">desc</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SFFF&quot;</span><span class="p">,</span> <span class="s2">&quot;FHFH&quot;</span><span class="p">,</span> <span class="s2">&quot;FFFH&quot;</span><span class="p">,</span> <span class="s2">&quot;HFFG&quot;</span><span class="p">],</span>
+    <span class="n">map_name</span><span class="o">=</span><span class="s2">&quot;4x4&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;rgb_array&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f721c18a280&gt;
+</pre></div>
+</div>
+<img alt="../_images/03bellman_2_1.png" src="../_images/03bellman_2_1.png" />
+</div>
+</div>
+<p>まずは，実装上扱いやすくするために，ベルマン方程式<a class="reference internal" href="#equation-bellman-v">(3.3)</a>を，行列形式(テーブル型)に変換してみます．
+状態空間<span class="math notranslate nohighlight">\(\mathcal{S}\)</span>は有限であるため，
+関数<span class="math notranslate nohighlight">\(v : \mathcal{S} \rightarrow \mathbb{R}\)</span>は，以下のようなベクトル<span class="math notranslate nohighlight">\(v \in \mathbb{R}^{|\mathcal{S}|}\)</span>と等価であるとみなすことが出来ます．</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+v = \left(
+\begin{array}{c}
+v(s_0)\\
+v(s_1)\\
+\vdots\\
+v(s_{|\mathcal{S}|})
+\end{array}
+\right),\ \mathcal{S} = \{s_0, s_1, \cdots s_{|\mathcal{S}|}\}
+\end{split}\]</div>
+<p>価値関数以外にも，環境の情報も行列形式にすることが可能です．報酬の期待値<span class="math notranslate nohighlight">\(g(s) = \sum_{a \in \mathcal{A}} \pi(a|s) r(s,a)\)</span>も価値関数と同様にベクトル<span class="math notranslate nohighlight">\(g \in \mathbb{R}^{|\mathcal{S}|}\)</span>とします．</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+g = \left(
+\begin{array}{c}
+g(s_0)\\
+g(s_1)\\
+\vdots\\
+g(s_{|\mathcal{S}|})
+\end{array}
+\right),\ \mathcal{S} = \{s_0, s_1, \cdots s_{|\mathcal{S}|}\}
+\end{split}\]</div>
+<p>方策<span class="math notranslate nohighlight">\(\pi\)</span>上で状態<span class="math notranslate nohighlight">\(s\)</span>から<span class="math notranslate nohighlight">\(s'\)</span>に遷移する確率<span class="math notranslate nohighlight">\(P_\pi(s,s') = \sum_{a \in \mathcal{A}} \pi(a|s) p(s'|s,a)\)</span>を<a class="reference external" href="https://ja.wikipedia.org/wiki/%E7%A2%BA%E7%8E%87%E8%A1%8C%E5%88%97">確率行列</a> <span class="math notranslate nohighlight">\(P_\pi \in \mathbb{R}^{|\mathcal{S}| \times |\mathcal{S}|}\)</span>とします．</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+P_\pi = \left(
+\begin{array}{ccc}
+    P_\pi(s_0, s_0)               &amp; \cdots &amp; P_\pi(s_0, s_{|\mathcal{S}|})               \\
+    \vdots                        &amp; \ddots &amp; \vdots                                      \\
+    P_\pi(s_{|\mathcal{S}|}, s_0) &amp; \cdots &amp; P_\pi(s_{|\mathcal{S}|}, s_{|\mathcal{S}|})
+  \end{array}
+\right),\ \mathcal{S} = \{s_0, s_1, \cdots s_{|\mathcal{S}|}\}
+\end{split}\]</div>
+<p>これらの行列を用いてベルマン方程式<a class="reference internal" href="#equation-bellman-v">(3.3)</a>を書き表すと，</p>
+<div class="math notranslate nohighlight" id="equation-bellman-eq-matrix-ver">
+<span class="eqno">(3.6)<a class="headerlink" href="#equation-bellman-eq-matrix-ver" title="Permalink to this equation">¶</a></span>\[v = g + \gamma P_\pi v\]</div>
+<p>となり，一般的な行列計算として実装上でも扱いやすい形となります．</p>
+<p><a class="reference external" href="https://www.gymlibrary.ml/environments/toy_text/frozen_lake/">FrozenLake</a>環境において，行動を一様ランダムに選択，つまり<span class="math notranslate nohighlight">\(\pi(a|s) = \frac{1}{4}\)</span>とした場合の環境情報<span class="math notranslate nohighlight">\(g, P_\pi\)</span>を求めると以下のようになります．</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">state_size</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">n</span>
+<span class="n">action_size</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span>
+
+
+<span class="k">def</span> <span class="nf">p</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;状態遷移関数</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sp : 次の状態 s&#39;</span>
+<span class="sd">        s  : 現在の状態 s</span>
+<span class="sd">        a  : 現在の状態で選択する行動 a</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        sでaを選択した後s&#39;に遷移する確率</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># 以下の実装はFrozenLake環境の内部実装を参考にしている．</span>
+    <span class="n">transition</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">P</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="n">a</span><span class="p">]</span>
+    <span class="n">prob</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">transition</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">sp</span><span class="p">:</span>
+            <span class="n">prob</span> <span class="o">+=</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">prob</span>
+
+
+<span class="k">def</span> <span class="nf">r</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;報酬&quot;&quot;&quot;</span>
+    <span class="n">transition</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">P</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="n">a</span><span class="p">]</span>
+    <span class="n">reward</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">transition</span><span class="p">:</span>
+        <span class="n">reward</span> <span class="o">+=</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">reward</span>
+
+
+<span class="k">def</span> <span class="nf">pi</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;方策&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">4.0</span>
+
+
+<span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">state_size</span><span class="p">,</span> <span class="n">state_size</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state_size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state_size</span><span class="p">):</span>
+        <span class="n">P</span><span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">pi</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="o">*</span> <span class="n">p</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">action_size</span><span class="p">)])</span>
+
+<span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">state_size</span><span class="p">,))</span>
+
+<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state_size</span><span class="p">):</span>
+    <span class="n">g</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">pi</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="o">*</span> <span class="n">r</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">action_size</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>P = 
+[[0.5  0.25 0.   ... 0.   0.   0.  ]
+ [0.25 0.25 0.25 ... 0.   0.   0.  ]
+ [0.   0.25 0.25 ... 0.   0.   0.  ]
+ ...
+ [0.   0.   0.   ... 0.25 0.25 0.  ]
+ [0.   0.   0.   ... 0.25 0.25 0.25]
+ [0.   0.   0.   ... 0.   0.   1.  ]]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-input docutils container">
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>g = 
+[0.   0.   0.   ... 0.   0.25 0.  ]
+</pre></div>
+</div>
+</div>
+</div>
+<p>これらをもとに<a class="reference internal" href="#solve-bellman-operator"><span class="std std-ref">前述の 2 つの手法</span></a>を用いて，価値関数を求めていきます．</p>
+<p>まずは 1 の手法をもとに，任意の関数<code class="docutils literal notranslate"><span class="pre">v1</span></code>(ここではゼロで初期化)に<span class="math notranslate nohighlight">\(B_\pi\)</span>を繰り返し適用し，価値関数を求めると以下のようになります．</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">GAMMA</span> <span class="o">=</span> <span class="mf">0.99</span>  <span class="c1"># 割引率</span>
+
+<span class="n">v1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">state_size</span><span class="p">,))</span>  <span class="c1"># 価値関数の初期値</span>
+
+<span class="n">v1_log</span> <span class="o">=</span> <span class="p">[</span><span class="n">v1</span><span class="p">]</span>  <span class="c1"># ログ保存用のリスト</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">g</span> <span class="o">+</span> <span class="n">GAMMA</span> <span class="o">*</span> <span class="n">P</span> <span class="o">@</span> <span class="n">v1</span>  <span class="c1"># ベルマン作用素により更新</span>
+    <span class="n">v1_log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span>  <span class="c1"># ログを保存</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;v1 =</span><span class="se">\n</span><span class="si">{</span><span class="n">v1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>v1 =
+[0.01235348 0.01042258 0.01933677 ... 0.17034441 0.43357905 0.        ]
+</pre></div>
+</div>
+</div>
+</div>
+<p>また，2の手法をもとに価値関数(ここでは変数<code class="docutils literal notranslate"><span class="pre">v2</span></code>)を求めます．
+式<a class="reference internal" href="#equation-bellman-eq-matrix-ver">(3.6)</a>の方程式の解は</p>
+<div class="math notranslate nohighlight">
+\[v = (I - \gamma P_\pi)^{-1}g\]</div>
+<p>となるため，この式を用いて解を求めます．</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">state_size</span><span class="p">,</span> <span class="n">state_size</span><span class="p">)</span> <span class="o">-</span> <span class="n">GAMMA</span><span class="o">*</span><span class="n">P</span><span class="p">)</span><span class="nd">@g</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;v2 =</span><span class="se">\n</span><span class="si">{</span><span class="n">v2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>v2 =
+[0.01235614 0.01042446 0.01933844 ... 0.17034482 0.43357944 0.        ]
+</pre></div>
+</div>
+</div>
+</div>
+<p>1の手法における解の収束と2の手法で求めた解を比べると以下のようになります．</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">v1_log</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v1_log</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state_size</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">v1_log</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">v1_log</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]])</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1E-5</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.2</span> <span class="o">+</span> <span class="mf">0.01</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;s = </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/03bellman_12_0.png" src="../_images/03bellman_12_0.png" />
+</div>
+</div>
+</div>
 </div>
 </div>
 

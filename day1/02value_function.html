@@ -28,6 +28,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
@@ -344,6 +345,7 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="section" id="id4">
 <h3><span class="section-number">2.2.1. </span>実験設定<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>環境として，OpenAI Gym の<a class="reference external" href="https://www.gymlibrary.ml/environments/toy_text/frozen_lake/">FrozenLake</a>を用います．
+この環境では状態空間が各マスに対応した<span class="math notranslate nohighlight">\(\mathcal{S} = \{0,1,\cdots,15\}\)</span>，行動空間が進む向きに対応した<span class="math notranslate nohighlight">\(\mathcal{A} = \{0,1,2,3\}\)</span>となっており，スタート地点からLakeに落ちずにゴール地点にたどり着くことを目的としています．
 環境に関する設定は，ドキュメントを参照してください．</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -355,16 +357,16 @@ const thebe_selector_output = ".output, .cell_output"
     <span class="s2">&quot;FrozenLake-v1&quot;</span><span class="p">,</span>
     <span class="n">desc</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SFFF&quot;</span><span class="p">,</span> <span class="s2">&quot;FHFH&quot;</span><span class="p">,</span> <span class="s2">&quot;FFFH&quot;</span><span class="p">,</span> <span class="s2">&quot;HFFG&quot;</span><span class="p">],</span>
     <span class="n">map_name</span><span class="o">=</span><span class="s2">&quot;4x4&quot;</span><span class="p">,</span>
-    <span class="n">is_slippery</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="s1">&#39;rgb_array&#39;</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;rgb_array&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f6af80dcd60&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f84cc160640&gt;
 </pre></div>
 </div>
 <img alt="../_images/02value_function_2_1.png" src="../_images/02value_function_2_1.png" />
@@ -468,6 +470,36 @@ key が状態行動対<span class="math notranslate nohighlight">\((S_t = s,A_t 
 </div>
 </div>
 <p>行動価値関数<code class="docutils literal notranslate"><span class="pre">q</span></code>の推定値を 0 に初期化します．行動価値関数は<span class="math notranslate nohighlight">\(\mathbb{R}^{|\mathcal{S}| \times |\mathcal{A}|}\)</span>の行列で保存され，行が状態，列が行動に対応します．</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(a=0\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(a=1\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(a=2\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(a=3\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(s=0\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(Q(0,0)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(Q(0,1)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(Q(0,2)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(Q(0,3)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(s=1\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(Q(1,0)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(Q(1,1)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(Q(1,2)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(Q(1,3)\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\cdots\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\cdots\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\cdots\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\cdots\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\cdots\)</span></p></td>
+</tr>
+</tbody>
+</table>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -481,8 +513,8 @@ key が状態行動対<span class="math notranslate nohighlight">\((S_t = s,A_t 
 今回は，推定のため 1000 エピソードを収集することにしましょう．
 各更新ループの一番最初でエピソード 1 つ分を収集します．</p>
 <p>そこで得られた配列から，割引累積報酬<span class="math notranslate nohighlight">\(G_t\)</span>を計算します．ここで，<span class="math notranslate nohighlight">\(G_t\)</span>の定義式<a class="reference internal" href="01what_is_rl.html#equation-g-t">(1.3)</a>より</p>
-<div class="math notranslate nohighlight">
-\[G_{t} = R_t + \gamma G_{t+1}\]</div>
+<div class="math notranslate nohighlight" id="equation-g-t-recursion">
+<span class="eqno">(2.4)<a class="headerlink" href="#equation-g-t-recursion" title="Permalink to this equation">¶</a></span>\[G_{t} = R_t + \gamma G_{t+1}\]</div>
 <p>のような時間方向後ろ向きに再帰的な関係関係を満たすため，これを利用し<span class="math notranslate nohighlight">\(G_{t}\)</span>を求めます．</p>
 <p><span class="math notranslate nohighlight">\(Q(s,a)\)</span>は定義式<a class="reference internal" href="#equation-qpi-definition">(2.2)</a>から<code class="docutils literal notranslate"><span class="pre">returns[state,</span> <span class="pre">action]</span> <span class="pre">=</span> <span class="pre">[G0,</span> <span class="pre">G1,</span> <span class="pre">...]</span></code>の平均値をとって推定します．</p>
 <div class="cell docutils container">
@@ -503,27 +535,45 @@ key が状態行動対<span class="math notranslate nohighlight">\((S_t = s,A_t 
 <p>これらより，行動価値関数の推定値が求まります．</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">q</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;q =</span><span class="se">\n</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[0.01190916, 0.01023706, 0.00212004, 0.00229243],
-       [0.        , 0.        , 0.00562115, 0.00257788],
-       [0.        , 0.01708053, 0.00681835, 0.        ],
-       [0.01316674, 0.        , 0.        , 0.        ],
-       [0.00327928, 0.02535882, 0.        , 0.0028863 ],
-       [0.        , 0.        , 0.        , 0.        ],
-       [0.        , 0.04313947, 0.        , 0.01774509],
-       [0.        , 0.        , 0.        , 0.        ],
-       [0.04866847, 0.        , 0.06729029, 0.00679987],
-       [0.01827579, 0.22611098, 0.05736468, 0.        ],
-       [0.05319895, 0.21016673, 0.        , 0.        ],
-       [0.        , 0.        , 0.        , 0.        ],
-       [0.        , 0.        , 0.        , 0.        ],
-       [0.        , 0.30845795, 0.50483947, 0.11489501],
-       [0.25030615, 0.18      , 1.        , 0.1103199 ],
-       [0.        , 0.        , 0.        , 0.        ]])
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>q =
+[[0.01594675 0.0102825  0.01547044 0.00752259]
+ [0.00616216 0.00878811 0.01608635 0.00980606]
+ [0.02168909 0.02690701 0.02178133 0.00803505]
+ [0.02431889 0.0318647  0.01255307 0.02926123]
+ [0.01214209 0.00935329 0.01537834 0.00824959]
+ [0.         0.         0.         0.        ]
+ [0.0693094  0.07242155 0.08516537 0.        ]
+ [0.         0.         0.         0.        ]
+ [0.00688474 0.04362722 0.02896232 0.05475294]
+ [0.04688596 0.09601756 0.10998265 0.13331415]
+ [0.28276785 0.19071108 0.13621034 0.1873002 ]
+ [0.         0.         0.         0.        ]
+ [0.         0.         0.         0.        ]
+ [0.049005   0.1072384  0.2974864  0.        ]
+ [0.27768494 0.4930696  0.69212322 0.46831066]
+ [0.         0.         0.         0.        ]]
+</pre></div>
+</div>
+</div>
+</div>
+<p>価値関数は，方策が一様ランダムであるため，各状態の全ての行動価値の平均を取ることにより求まります．</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;v =</span><span class="se">\n</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>v =
+[0.01230557 0.01021067 0.01960312 0.02449947 0.01128083 0.
+ 0.05672408 0.         0.03355681 0.09655008 0.19924737 0.
+ 0.         0.11343245 0.4827971  0.        ]
 </pre></div>
 </div>
 </div>

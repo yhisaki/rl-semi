@@ -17,20 +17,34 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-価値関数または行動価値関数に関して，その定義を確認し，強化学習アルゴリズムにおけるそれらの利用方法を確認します．
+%matplotlib inline
+import matplotlib.pyplot as plt
+import gym
 
-## 定義
+env = gym.make(
+    "FrozenLake-v1",
+    desc=["SFFF", "FHFH", "FFFH", "HFFG"],
+    map_name="4x4",
+    is_slippery=False,
+)
 
-まずは，一般的に用いられる価値関数/行動価値関数の定義を確認します．
+env.reset()
+plt.imshow(env.render('rgb_array'))
 
-- 価値関数(Value Function)
-  $V(s) = \underE{}{}$
 ------------------
 
-[0;36m  Input [0;32mIn [1][0;36m[0m
-[0;31m    価値関数または行動価値関数に関して，その定義を確認し，強化学習アルゴリズムにおけるそれらの利用方法を確認します．[0m
-[0m                                                           ^[0m
-[0;31mSyntaxError[0m[0;31m:[0m invalid character in identifier
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mTypeError[0m                                 Traceback (most recent call last)
+Input [0;32mIn [1][0m, in [0;36m<cell line: 13>[0;34m()[0m
+[1;32m      5[0m env [38;5;241m=[39m gym[38;5;241m.[39mmake(
+[1;32m      6[0m     [38;5;124m"[39m[38;5;124mFrozenLake-v1[39m[38;5;124m"[39m,
+[1;32m      7[0m     desc[38;5;241m=[39m[[38;5;124m"[39m[38;5;124mSFFF[39m[38;5;124m"[39m, [38;5;124m"[39m[38;5;124mFHFH[39m[38;5;124m"[39m, [38;5;124m"[39m[38;5;124mFFFH[39m[38;5;124m"[39m, [38;5;124m"[39m[38;5;124mHFFG[39m[38;5;124m"[39m],
+[1;32m      8[0m     map_name[38;5;241m=[39m[38;5;124m"[39m[38;5;124m4x4[39m[38;5;124m"[39m,
+[1;32m      9[0m     is_slippery[38;5;241m=[39m[38;5;28;01mFalse[39;00m,
+[1;32m     10[0m )
+[1;32m     12[0m env[38;5;241m.[39mreset()
+[0;32m---> 13[0m plt[38;5;241m.[39mimshow([43menv[49m[38;5;241;43m.[39;49m[43mrender[49m[43m([49m[38;5;124;43m'[39;49m[38;5;124;43mrgb_array[39;49m[38;5;124;43m'[39;49m[43m)[49m)
 
-SyntaxError: invalid character in identifier (1631767636.py, line 1)
+[0;31mTypeError[0m: render() takes 1 positional argument but 2 were given
+TypeError: render() takes 1 positional argument but 2 were given
 
