@@ -32,3 +32,7 @@ html:
 
 exclude_patterns:
   - .venv/*
+
+sphinx:
+  extra_extensions:
+    - sphinx_proof
