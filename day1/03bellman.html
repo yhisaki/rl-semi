@@ -56,6 +56,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4. Q-learning" href="04q-learning.html" />
     <link rel="prev" title="2. 価値関数" href="02value_function.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -114,6 +115,11 @@ const thebe_selector_output = ".output, .cell_output"
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    3. ベルマン方程式
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="04q-learning.html">
+   4. Q-learning
   </a>
  </li>
 </ul>
@@ -237,6 +243,45 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#bellman-opt-eq">
+   3.2. ベルマン最適方程式
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     3.2.1. 最適方策
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     3.2.2. ベルマン最適方程式
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     3.2.3. ベルマン最適作用素
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id9">
+   3.3. 動的計画法
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id10">
+     3.3.1. 価値反復
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id11">
+     3.3.2. 方策反復
+    </a>
+   </li>
+  </ul>
+ </li>
 </ul>
 
             </nav>
@@ -274,6 +319,45 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#bellman-opt-eq">
+   3.2. ベルマン最適方程式
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     3.2.1. 最適方策
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     3.2.2. ベルマン最適方程式
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     3.2.3. ベルマン最適作用素
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id9">
+   3.3. 動的計画法
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id10">
+     3.3.1. 価値反復
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id11">
+     3.3.2. 方策反復
+    </a>
+   </li>
+  </ul>
+ </li>
 </ul>
 
                         </nav>
@@ -286,7 +370,8 @@ const thebe_selector_output = ".output, .cell_output"
   <div class="tex2jax_ignore mathjax_ignore section" id="id1">
 <h1><span class="section-number">3. </span>ベルマン方程式<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <div class="math notranslate nohighlight">
-\[\newcommand{\E}{{\mathrm E}}
+\[\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\E}{{\mathrm E}}
 \newcommand{\underE}[2]{\underset{\begin{subarray}{c}#1 \end{subarray}}{\E}\left[ #2 \right]}
 \newcommand{\Epi}[1]{\underset{\begin{subarray}{c}\tau \sim \pi \end{subarray}}{\E}\left[ #1 \right]}\]</div>
 <p>本章では，価値関数/行動価値関数が満たす再帰的な性質を基にした <strong>ベルマン方程式(Bellman equation)</strong> を紹介します．
@@ -340,25 +425,48 @@ V^\pi(s) &amp;= \underE{\pi}{G_t | S_t = s}\\
 <p>このように，ある作用素に対して<span class="math notranslate nohighlight">\(v = B(v)\)</span>のような関係を成り立たせる<span class="math notranslate nohighlight">\(v\)</span>を<strong>不動点(fixed-point)</strong> と呼びます．</p>
 <p>また，この作用素は同じ関数に k 回適用した場合，つまり<span class="math notranslate nohighlight">\(B( \cdots B(B(v)))\)</span>とした場合<span class="math notranslate nohighlight">\(B^k(v)\)</span>のように表記します．</p>
 <p>このベルマン作用素に対して以下の命題が成り立ちます．</p>
-<div class="proof proposition admonition" id="b_pi_convergence">
-<p class="admonition-title"><span class="caption-number">Proposition 3.1 </span> (<span class="math notranslate nohighlight">\(B_\pi\)</span>の収束性)</p>
+<!-- ```{prf:proposition} $B_\pi$の収束性
+:label: b_pi_convergence
+
+任意の有界関数$v:\mathcal{S} \rightarrow \mathbb{R}$に対して，ベルマン作用素$B_\pi$を繰り返し適用した関数$(B_\pi^k v)$は価値関数$V^\pi$に漸近的に等しくなる．
+
+$$V^\pi(s) = \lim_{k\rightarrow \infty} (B_\pi^k(v))(s), \forall s \in \mathcal{S}$$
+
+``` -->
+<!-- ```{prf:proposition} $B_\pi$の不動点の一意性
+:label: b_pi_fixed_point
+
+以下のベルマン方程式
+
+$$v = B_\pi(v), \forall s \in \mathcal{S}$$
+
+を満たす解は価値関数$V^\pi$ただ一つである．
+
+``` -->
+<div class="proof proposition admonition" id="b_pi_fixed_point">
+<p class="admonition-title"><span class="caption-number">Proposition 3.1 </span></p>
 <div class="proposition-content section" id="proof-content">
-<p>任意の有界関数<span class="math notranslate nohighlight">\(v:\mathcal{S} \rightarrow \mathbb{R}\)</span>に対して，ベルマン作用素<span class="math notranslate nohighlight">\(B_\pi\)</span>を繰り返し適用した関数<span class="math notranslate nohighlight">\((B_\pi^k v)\)</span>は価値関数<span class="math notranslate nohighlight">\(V^\pi\)</span>に漸近的に等しくなる．</p>
+<p>ベルマン作用素<span class="math notranslate nohighlight">\(B_\pi\)</span>は，</p>
 <div class="math notranslate nohighlight">
-\[V^\pi(s) = \lim_{k\rightarrow \infty} (B_\pi^k(v))(s), \forall s \in \mathcal{S}\]</div>
-</div>
-</div><div class="proof proposition admonition" id="b_pi_fixed_point">
-<p class="admonition-title"><span class="caption-number">Proposition 3.2 </span> (<span class="math notranslate nohighlight">\(B_\pi\)</span>の不動点の一意性)</p>
-<div class="proposition-content section" id="proof-content">
-<p>以下のベルマン方程式</p>
+\[v^* = B_\pi(v^*), \forall s \in \mathcal{S}\]</div>
+<p>を満たす唯一の不動点<span class="math notranslate nohighlight">\(v^*\)</span>を持つ．
+また，任意の有界関数<span class="math notranslate nohighlight">\(v_0:\mathcal{S} \rightarrow \mathbb{R}\)</span>
+に対して$B_\piを繰り返し適用すると漸近的に不動点に等しくなる．</p>
 <div class="math notranslate nohighlight">
-\[v = B_\pi(v), \forall s \in \mathcal{S}\]</div>
-<p>を満たす解は価値関数<span class="math notranslate nohighlight">\(V^\pi\)</span>ただ一つである．</p>
+\[v^*(s) = \lim_{k\rightarrow \infty} (B_\pi^k(v_0))(s), \forall s \in \mathcal{S}\]</div>
 </div>
-</div><p>これらの命題より，環境の情報が既知である場合</p>
+</div><div class="proof admonition" id="proof">
+<p>Proof. <span class="math notranslate nohighlight">\(B_\pi\)</span>が最大ノルムに対して縮小写像であることを示すことを示すことにより，
+<a class="reference external" href="https://ja.wikipedia.org/wiki/%E3%83%90%E3%83%8A%E3%83%83%E3%83%8F%E3%81%AE%E4%B8%8D%E5%8B%95%E7%82%B9%E5%AE%9A%E7%90%86">バナッハの不動点定理</a>より，
+ベルマン作用素が唯一の不動点を持ち，
+任意の<span class="math notranslate nohighlight">\(v\)</span>にベルマン作用素を繰り返し適用することで，不動点に漸近的に等しくなることがわかります．
+詳しくは追記します．</p>
+</div>
+<p><span class="math notranslate nohighlight">\(V^\pi\)</span>はベルマン作用素の不動点の一つであること，ベルマン作用素は不動点を一つしか持たないことより，<span class="math notranslate nohighlight">\(V^\pi\)</span>はベルマン作用素の唯一の不動点(ベルマン方程式の唯一解)であると言えます．</p>
+<p>これらの命題より，環境の情報が既知である場合</p>
 <ol class="simple" id="solve-bellman-operator">
-<li><p><a class="reference internal" href="#b_pi_convergence">Proposition 3.1</a>より，任意の関数<span class="math notranslate nohighlight">\(v\)</span>に対して<span class="math notranslate nohighlight">\(B_\pi\)</span>を繰り返し適用する</p></li>
-<li><p><a class="reference internal" href="#b_pi_fixed_point">Proposition 3.2</a><span class="math notranslate nohighlight">\(より，v = B_\pi(v), \forall s \in \mathcal{S}\)</span>を直接解く</p></li>
+<li><p><span class="math notranslate nohighlight">\(v = B_\pi(v), \forall s \in \mathcal{S}\)</span>を直接解く</p></li>
+<li><p>任意の関数<span class="math notranslate nohighlight">\(v\)</span>に対して<span class="math notranslate nohighlight">\(B_\pi\)</span>を繰り返し適用する</p></li>
 </ol>
 <p>の2通り方法で<span class="math notranslate nohighlight">\(V^\pi\)</span>を得ることが出来ます．</p>
 </div>
@@ -391,7 +499,7 @@ V^\pi(s) &amp;= \underE{\pi}{G_t | S_t = s}\\
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f721c18a280&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f27f012e2e0&gt;
 </pre></div>
 </div>
 <img alt="../_images/03bellman_2_1.png" src="../_images/03bellman_2_1.png" />
@@ -439,16 +547,17 @@ P_\pi = \left(
 <span class="eqno">(3.6)<a class="headerlink" href="#equation-bellman-eq-matrix-ver" title="Permalink to this equation">¶</a></span>\[v = g + \gamma P_\pi v\]</div>
 <p>となり，一般的な行列計算として実装上でも扱いやすい形となります．</p>
 <p><a class="reference external" href="https://www.gymlibrary.ml/environments/toy_text/frozen_lake/">FrozenLake</a>環境において，行動を一様ランダムに選択，つまり<span class="math notranslate nohighlight">\(\pi(a|s) = \frac{1}{4}\)</span>とした場合の環境情報<span class="math notranslate nohighlight">\(g, P_\pi\)</span>を求めると以下のようになります．</p>
-<div class="cell tag_hide-input docutils container">
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
 
 <span class="n">state_size</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">n</span>
 <span class="n">action_size</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span>
 
 
+<span class="c1"># FrozenLakeの内部実装を参考に，状態遷移関数を作成する</span>
 <span class="k">def</span> <span class="nf">p</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;状態遷移関数</span>
 
@@ -460,7 +569,6 @@ P_\pi = \left(
 <span class="sd">    Returns:</span>
 <span class="sd">        sでaを選択した後s&#39;に遷移する確率</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># 以下の実装はFrozenLake環境の内部実装を参考にしている．</span>
     <span class="n">transition</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">P</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="n">a</span><span class="p">]</span>
     <span class="n">prob</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">transition</span><span class="p">:</span>
@@ -468,9 +576,17 @@ P_\pi = \left(
             <span class="n">prob</span> <span class="o">+=</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">prob</span>
 
-
+<span class="c1"># FrozenLakeの内部実装を参考に，報酬関数を作成する</span>
 <span class="k">def</span> <span class="nf">r</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;報酬&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;報酬関数</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s  : 現在の状態 s</span>
+<span class="sd">        a  : 現在の状態で選択する行動 a</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        報酬r(s,a)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">transition</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">P</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="n">a</span><span class="p">]</span>
     <span class="n">reward</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">transition</span><span class="p">:</span>
@@ -514,24 +630,22 @@ P_\pi = \left(
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>g = 
-[0.   0.   0.   ... 0.   0.25 0.  ]
+[0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.   0.
+ 0.25 0.  ]
 </pre></div>
 </div>
 </div>
 </div>
 <p>これらをもとに<a class="reference internal" href="#solve-bellman-operator"><span class="std std-ref">前述の 2 つの手法</span></a>を用いて，価値関数を求めていきます．</p>
-<p>まずは 1 の手法をもとに，任意の関数<code class="docutils literal notranslate"><span class="pre">v1</span></code>(ここではゼロで初期化)に<span class="math notranslate nohighlight">\(B_\pi\)</span>を繰り返し適用し，価値関数を求めると以下のようになります．</p>
+<p>まずは，ベルマン方程式を直接解く手法により，価値関数を求めます．
+式<a class="reference internal" href="#equation-bellman-eq-matrix-ver">(3.6)</a>の方程式の解は</p>
+<div class="math notranslate nohighlight">
+\[v = (I - \gamma P_\pi)^{-1}g\]</div>
+<p>となるため，この式を用いて解を求めます．</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">GAMMA</span> <span class="o">=</span> <span class="mf">0.99</span>  <span class="c1"># 割引率</span>
-
-<span class="n">v1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">state_size</span><span class="p">,))</span>  <span class="c1"># 価値関数の初期値</span>
-
-<span class="n">v1_log</span> <span class="o">=</span> <span class="p">[</span><span class="n">v1</span><span class="p">]</span>  <span class="c1"># ログ保存用のリスト</span>
-
-<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
-    <span class="n">v1</span> <span class="o">=</span> <span class="n">g</span> <span class="o">+</span> <span class="n">GAMMA</span> <span class="o">*</span> <span class="n">P</span> <span class="o">@</span> <span class="n">v1</span>  <span class="c1"># ベルマン作用素により更新</span>
-    <span class="n">v1_log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span>  <span class="c1"># ログを保存</span>
+<span class="n">v1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">state_size</span><span class="p">,</span> <span class="n">state_size</span><span class="p">)</span> <span class="o">-</span> <span class="n">GAMMA</span> <span class="o">*</span> <span class="n">P</span><span class="p">)</span> <span class="o">@</span> <span class="n">g</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;v1 =</span><span class="se">\n</span><span class="si">{</span><span class="n">v1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
@@ -539,19 +653,25 @@ P_\pi = \left(
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>v1 =
-[0.01235348 0.01042258 0.01933677 ... 0.17034441 0.43357905 0.        ]
+[ 1.23561373e-02  1.04244610e-02  1.93384359e-02  9.47774828e-03
+  1.47870516e-02 -2.28588108e-16  3.88944494e-02 -6.52373983e-16
+  3.26024740e-02  8.43376421e-02  1.37810854e-01  0.00000000e+00
+ -2.05408145e-16  1.70344822e-01  4.33579442e-01  0.00000000e+00]
 </pre></div>
 </div>
 </div>
 </div>
-<p>また，2の手法をもとに価値関数(ここでは変数<code class="docutils literal notranslate"><span class="pre">v2</span></code>)を求めます．
-式<a class="reference internal" href="#equation-bellman-eq-matrix-ver">(3.6)</a>の方程式の解は</p>
-<div class="math notranslate nohighlight">
-\[v = (I - \gamma P_\pi)^{-1}g\]</div>
-<p>となるため，この式を用いて解を求めます．</p>
+<p>次に，ベルマン作用素を繰り返し適用する手法を実装します．
+任意の関数<code class="docutils literal notranslate"><span class="pre">v2</span></code>(ここではゼロで初期化)に<span class="math notranslate nohighlight">\(B_\pi\)</span>を繰り返し適用し，価値関数を求めると以下のようになります．</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">state_size</span><span class="p">,</span> <span class="n">state_size</span><span class="p">)</span> <span class="o">-</span> <span class="n">GAMMA</span><span class="o">*</span><span class="n">P</span><span class="p">)</span><span class="nd">@g</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">state_size</span><span class="p">,))</span>  <span class="c1"># 価値関数の初期値</span>
+
+<span class="n">v2_log</span> <span class="o">=</span> <span class="p">[</span><span class="n">v2</span><span class="p">]</span>  <span class="c1"># ログ保存用のリスト</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">g</span> <span class="o">+</span> <span class="n">GAMMA</span> <span class="o">*</span> <span class="n">P</span> <span class="o">@</span> <span class="n">v2</span>  <span class="c1"># ベルマン作用素により更新</span>
+    <span class="n">v2_log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span>  <span class="c1"># ログを保存</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;v2 =</span><span class="se">\n</span><span class="si">{</span><span class="n">v2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
@@ -559,26 +679,28 @@ P_\pi = \left(
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>v2 =
-[0.01235614 0.01042446 0.01933844 ... 0.17034482 0.43357944 0.        ]
+[0.01235348 0.01042258 0.01933677 0.00947646 0.01478549 0.
+ 0.0388938  0.         0.03260156 0.08433709 0.13781037 0.
+ 0.         0.17034441 0.43357905 0.        ]
 </pre></div>
 </div>
 </div>
 </div>
-<p>1の手法における解の収束と2の手法で求めた解を比べると以下のようになります．</p>
-<div class="cell docutils container">
+<p>2 つの手法で求めた解を比べると以下のようになります．</p>
+<div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">v1_log</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v1_log</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">v2_log</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v2_log</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state_size</span><span class="p">):</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">v1_log</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">v1_log</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]])</span>
-    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1E-5</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">v2_log</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">v1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">v2_log</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]])</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.2</span> <span class="o">+</span> <span class="mf">0.01</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">v1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.2</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;s = </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
@@ -586,7 +708,310 @@ P_\pi = \left(
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/03bellman_12_0.png" src="../_images/03bellman_12_0.png" />
+<img alt="../_images/03bellman_13_0.png" src="../_images/03bellman_13_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="bellman-opt-eq">
+<span id="id5"></span><h2><span class="section-number">3.2. </span>ベルマン最適方程式<a class="headerlink" href="#bellman-opt-eq" title="Permalink to this headline">¶</a></h2>
+<p>これまでは，任意の方策に対する価値関数/ベルマン方程式を見てきました．
+本章では，これまで紹介してきたものを用いて <strong>最適方策</strong> を導入していきます．</p>
+<div class="section" id="id6">
+<h3><span class="section-number">3.2.1. </span>最適方策<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>最適方策は以下のように定義されます．</p>
+<div class="proof definition admonition" id="optimal_policy">
+<p class="admonition-title"><span class="caption-number">Definition 3.1 </span></p>
+<div class="definition-content section" id="proof-content">
+<p>任意の初期状態<span class="math notranslate nohighlight">\(s \in \mathcal{S}\)</span>からの期待リターンを最大化する方策<span class="math notranslate nohighlight">\(\pi^*\)</span>を最適方策と呼ぶ．
+最適方策<span class="math notranslate nohighlight">\(\pi^*\)</span>の価値関数<span class="math notranslate nohighlight">\(V^{\pi^*}(s) = V^*(s)\)</span>は任意の方策<span class="math notranslate nohighlight">\(\pi\)</span>に対して以下が成り立つ</p>
+<div class="math notranslate nohighlight">
+\[V^*(s) \geq V^\pi(s),\ \forall s\]</div>
+</div>
+</div><p>また，最適方策の価値関数 <span class="math notranslate nohighlight">\(V^{\pi^*}(s) = V^*(s)\)</span> を最適価値関数と呼びます．
+この最適方策の定義は，全ての初期状態からの期待リターンを最大化するものであり，
+単一の初期分布からの期待リターンを評価関数とし，それを最大化するだけではないのです．
+しかし，このような条件を満たす最適方策は本当に存在するのでしょうか？
+結論から言うと，最適方策は存在し(これは複数存在する可能性あり)，それらは一意の最適価値関数を持ちます．</p>
+<p>以下それを説明していきます．</p>
+</div>
+<div class="section" id="id7">
+<h3><span class="section-number">3.2.2. </span>ベルマン最適方程式<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="proof proposition admonition" id="policy_improvement">
+<p class="admonition-title"><span class="caption-number">Proposition 3.2 </span> (方策の改善)</p>
+<div class="proposition-content section" id="proof-content">
+<p>任意の方策<span class="math notranslate nohighlight">\(\pi\)</span>に対して，</p>
+<div class="math notranslate nohighlight">
+\[\pi'(a|s) = \delta_{a,\mu(s)},\ \ \text{where }
+\mu(s) = \argmax_{a} Q^\pi(s,a)\]</div>
+<p>とした場合，</p>
+<div class="math notranslate nohighlight">
+\[V^{\pi'}(s) \geq V^\pi(s), \forall s\]</div>
+<p>となる．</p>
+</div>
+</div><div class="proof admonition" id="proof">
+<p>Proof. 任意の<span class="math notranslate nohighlight">\(s\in\mathcal{S}\)</span>に対して</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+V^\pi(s) &amp;\leq Q^\pi(s,\mu(s))\\
+&amp;=\underE{}{R_t + \gamma V^\pi(S_{t+1})  |  S_t=s, A_t = \mu(s)}\\
+&amp;=\underE{\pi'}{R_t + \gamma V^\pi(S_{t+1}) |  S_t=s}\\
+&amp;\leq \underE{\pi'}{R_t + \gamma Q^\pi(S_{t+1}, \mu(S_{t+1}))  |  S_t=s}\\
+&amp;=\underE{\pi'}{R_t + \gamma \underE{}{R_{t+1} + \gamma V^\pi(S_{t+2}) | S_{t+1}, A_{t+1} = \mu(S_{t+1}) }  |  S_t=s}\\
+&amp;= \underE{\pi'}{R_t + \gamma R_{t+1} + \gamma^2 V^\pi(S_{t+2}) |  S_t=s}\\
+&amp;\vdots\\
+&amp;= \underE{\pi'}{R_t + \gamma R_{t+1} + \gamma^2 R_{t+2} + \gamma^3 R_{t+3} + \cdots | S_t = s }\\
+&amp;= V^{\pi'}(s)
+\end{split}\]</div>
+<p>が成り立つため，<a class="reference internal" href="#policy_improvement">Proposition 3.2</a>は成立する．</p>
+</div>
+<p><a class="reference internal" href="#policy_improvement">Proposition 3.2</a>より，<span class="math notranslate nohighlight">\(\pi\)</span>を<span class="math notranslate nohighlight">\(\pi'(a|s) = \delta_{a,\mu(s)}\)</span>と更新した際，<span class="math notranslate nohighlight">\(\pi'\)</span>は<span class="math notranslate nohighlight">\(\pi\)</span>より良くなることがわかります．
+また，状態空間/行動空間が有限であるため方策も有限です．
+そのため，方策を改善し続けると，いつかはそれ以上改善しない方策にたどり着き，その方策の価値関数<span class="math notranslate nohighlight">\(v^*\)</span>に対して</p>
+<div class="math notranslate nohighlight" id="equation-bellman-opt-v">
+<span class="eqno">(3.7)<a class="headerlink" href="#equation-bellman-opt-v" title="Permalink to this equation">¶</a></span>\[\begin{split}
+v^*(s) &amp;= \max_{a \in \mathcal{A}} q^*(s,a)\\
+&amp;= \max_{a\in\mathcal{A}} \left(r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) v^*(s') \right), \forall s \in \mathcal{S}\end{split}\]</div>
+<p>が成り立つことがわかります．また，行動価値関数に関しても，</p>
+<div class="math notranslate nohighlight" id="equation-bellman-opt-q">
+<span class="eqno">(3.8)<a class="headerlink" href="#equation-bellman-opt-q" title="Permalink to this equation">¶</a></span>\[\begin{split}q^*(s,a) &amp;= r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) v^*(s')\\
+&amp;= r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) \max_{a' \in \mathcal{A}} q^*(s',a'), \forall s \in \mathcal{S}, a \in \mathcal{A}\end{split}\]</div>
+<p>が成り立ちます．式<a class="reference internal" href="#equation-bellman-opt-v">(3.7)</a>,<a class="reference internal" href="#equation-bellman-opt-q">(3.8)</a>は最適ベルマン方程式と呼ばれます．
+<a class="reference internal" href="#optimal_policy">Definition 3.1</a>から，最適価値関数も最適ベルマン方程式を満たします．</p>
+<p>また，これら方程式を満たす価値関数に対して，</p>
+<div class="math notranslate nohighlight" id="equation-opt-policy">
+<span class="eqno">(3.9)<a class="headerlink" href="#equation-opt-policy" title="Permalink to this equation">¶</a></span>\[\pi^*(a|s) = \delta_{a,\mu^*(s)},\ \ \text{where }
+\mu^*(s) = \argmax_{a} q^*(s,a)
+\]</div>
+<p>とした方策の価値関数は<span class="math notranslate nohighlight">\(v^*\)</span>になります．</p>
+</div>
+<div class="section" id="id8">
+<h3><span class="section-number">3.2.3. </span>ベルマン最適作用素<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>前節で最適価値関数がベルマン最適方程式を満たすことを示しました．
+本節では前章と同様にベルマン最適方程式をもとにした， <strong>ベルマン最適作用素(Bellman optimality operator)</strong> を導入します．</p>
+<p>ベルマン最適作用素は，ある関数<span class="math notranslate nohighlight">\(v : \mathcal{S} \rightarrow \mathbb{R}\)</span>に対する写像<span class="math notranslate nohighlight">\(B_*: \mathbb{R}^{|\mathcal{S}|} \rightarrow \mathbb{R}^{|\mathcal{S}|}\)</span>であり，</p>
+<div class="math notranslate nohighlight">
+\[(B_*(v))(s) := \max_{a\in\mathcal{A}} \left(r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) v(s') \right), \forall s \in \mathcal{S}\]</div>
+<p>と定義されます．</p>
+<p>このベルマン最適作用素を用いて，式<a class="reference internal" href="#equation-bellman-opt-v">(3.7)</a>のベルマン最適方程式を以下のように書き表せます．</p>
+<div class="math notranslate nohighlight">
+\[v = B_*(v), \forall s \in \mathcal{S}\]</div>
+<p>このベルマン作用素に対して以下の命題が成り立ちます．</p>
+<div class="proof proposition admonition" id="bellman_opt_fixed_point">
+<p class="admonition-title"><span class="caption-number">Proposition 3.3 </span></p>
+<div class="proposition-content section" id="proof-content">
+<p>ベルマン最適作用素<span class="math notranslate nohighlight">\(B_*\)</span>は，</p>
+<div class="math notranslate nohighlight">
+\[v^* = B_*(v^*), \forall s \in \mathcal{S}\]</div>
+<p>を満たす唯一の不動点<span class="math notranslate nohighlight">\(v^*\)</span>を持つ．
+また，任意の有界関数<span class="math notranslate nohighlight">\(v_0:\mathcal{S} \rightarrow \mathbb{R}\)</span>
+に対して<span class="math notranslate nohighlight">\(B_*\)</span>を繰り返し適用すると漸近的に不動点に等しくなる．</p>
+<div class="math notranslate nohighlight">
+\[v^*(s) = \lim_{k\rightarrow \infty} (B_*^k(v_0))(s), \forall s \in \mathcal{S}\]</div>
+</div>
+</div><div class="proof admonition" id="proof">
+<p>Proof. <span class="math notranslate nohighlight">\(B_\pi\)</span>と同様，<span class="math notranslate nohighlight">\(B_*\)</span>が最大ノルムに対して縮小写像であることを示すことを示すことにより，
+<a class="reference external" href="https://ja.wikipedia.org/wiki/%E3%83%90%E3%83%8A%E3%83%83%E3%83%8F%E3%81%AE%E4%B8%8D%E5%8B%95%E7%82%B9%E5%AE%9A%E7%90%86">バナッハの不動点定理</a>より，
+この命題が示されます．
+詳しくは追記します．</p>
+</div>
+<p>この命題や，今までの議論をまとめると</p>
+<ol class="simple">
+<li><p><a class="reference internal" href="#policy_improvement">Proposition 3.2</a>により任意の方策を改善できる</p></li>
+<li><p>方策が有限であることより，方策の改善を繰り返すとこれ以上改善できない方策に行き着く</p></li>
+<li><p>これ以上改善できない方策の価値関数はベルマン最適方程式を満たす</p></li>
+<li><p><a class="reference internal" href="#bellman_opt_fixed_point">Proposition 3.3</a>よりベルマン最適方程式の解は一意に定まる</p></li>
+</ol>
+<p>ことにより，</p>
+<ol class="simple">
+<li><p>最適価値関数<span class="math notranslate nohighlight">\(V^*\)</span>はベルマン方程式の唯一解となる</p></li>
+<li><p><span class="math notranslate nohighlight">\(\pi^*(a|s) = \delta_{a,\mu^*(s)},\ \ \text{where }\mu^*(s) = \argmax_{a} Q^*(s,a)\)</span>は最適方策となる</p></li>
+</ol>
+<p>ことがわかります．</p>
+</div>
+</div>
+<div class="section" id="id9">
+<h2><span class="section-number">3.3. </span>動的計画法<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<p><strong>動的計画法(Dynamic Programing; DP)</strong> とは，対象とするマルコフ過程の完全な情報を用いて最適方策を求める手法を指します．</p>
+<p>本章では<a class="reference internal" href="#bellman-opt-eq"><span class="std std-ref">前章</span></a>をもとに動的計画法の一種である2つの手法，</p>
+<ol class="simple">
+<li><p><strong>価値反復(Value Iteration)</strong></p></li>
+<li><p><strong>方策反復(Policy Iteration)</strong></p></li>
+</ol>
+<p>を紹介します．</p>
+<div class="section" id="id10">
+<h3><span class="section-number">3.3.1. </span>価値反復<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>この手法の基本的な方針は，式<a class="reference internal" href="#equation-bellman-opt-v">(3.7)</a>のベルマン最適方程式を解いて，式<a class="reference internal" href="#equation-opt-policy">(3.9)</a>により，最適価値関数から最適方策を導くというものです．
+まず最初のベルマン最適方程式の求解に関して，<a class="reference internal" href="#solve-bellman-operator"><span class="std std-ref">ベルマン方程式を解く手法</span></a>と同様，直接解くか，任意の関数に<span class="math notranslate nohighlight">\(B_*\)</span>を繰り返し適用するかの2通りの手法が考えられます．
+しかし，ベルマン最適作用素は単純な線形変換ではなく<span class="math notranslate nohighlight">\(\max_{a\in\mathcal{A}}\cdots\)</span>と，最大値をとる操作があるため，<span class="math notranslate nohighlight">\(B_*\)</span>を繰り返し適用する手法以外の選択肢しかありません．</p>
+<p>それでは，価値反復を<a class="reference external" href="https://www.gymlibrary.ml/environments/toy_text/frozen_lake/">FrozenLake</a>に実装して見ましょう．</p>
+<p>まずは，ベルマン最適作用素を関数として実装します．</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">bellman_optimality_operator</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;ベルマン最適作用素</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        v : 価値関数</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        B*(v)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">state_size</span><span class="p">,</span> <span class="n">action_size</span><span class="p">))</span>  <span class="c1"># 行動価値関数</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state_size</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">action_size</span><span class="p">):</span>
+            <span class="n">q</span><span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">GAMMA</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">p</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state_size</span><span class="p">)]</span>  <span class="c1"># spは次状態s&#39;を表す</span>
+            <span class="p">)</span>  <span class="c1"># 行動価値関数を計算</span>
+
+    <span class="k">return</span> <span class="n">q</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># 行動価値の最大値が</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>このベルマン作用素を任意の<span class="math notranslate nohighlight">\(v\)</span>(ここでは0で初期化)に繰り返し適用すると，最適価値関数が求まります．</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">state_size</span><span class="p">,))</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">bellman_optimality_operator</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;v =</span><span class="se">\n</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>v =
+[0.54202593 0.49880319 0.47069569 0.4568517  0.55845096 0.
+ 0.35834807 0.         0.59179874 0.64307982 0.61520756 0.
+ 0.         0.74172044 0.86283743 0.        ]
+</pre></div>
+</div>
+</div>
+</div>
+<p>また，最適価値関数から，行動価値関数を作ることによって，最適方策(ここでは<code class="docutils literal notranslate"><span class="pre">mu</span></code>)を導けます．</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">state_size</span><span class="p">,</span> <span class="n">action_size</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state_size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">action_size</span><span class="p">):</span>
+        <span class="n">q</span><span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">GAMMA</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">p</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state_size</span><span class="p">)]</span>
+        <span class="p">)</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;q =</span><span class="se">\n</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mu =</span><span class="se">\n</span><span class="si">{</span><span class="n">mu</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>q =
+[[0.54202593 0.52776243 0.52776243 0.52234217]
+ [0.34347361 0.33419814 0.31993463 0.49880319]
+ [0.43818949 0.43362098 0.4243455  0.47069569]
+ ...
+ [0.45698409 0.5295041  0.74172044 0.49695269]
+ [0.73252259 0.86283743 0.82108818 0.78111957]
+ [0.         0.         0.         0.        ]]
+mu =
+[0 3 3 3 0 0 0 0 3 1 0 0 0 2 1 0]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id11">
+<h3><span class="section-number">3.3.2. </span>方策反復<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<p>この手法は，ベルマン最適方程式を直接解くのではなく，
+<a class="reference internal" href="#policy_improvement">Proposition 3.2</a>を用いて，
+任意の決定的な初期方策を改善して最適方策に近づいていく手法です．
+ただし，方策を改善するためには，その方策の価値関数が必要なため，この手法は，</p>
+<ol class="simple">
+<li><p>方策の価値関数を求める</p></li>
+<li><p>それを用いて方策を改善する</p></li>
+</ol>
+<p>という２つの処理を繰り返します．</p>
+<p>先程と同様<a class="reference external" href="https://www.gymlibrary.ml/environments/toy_text/frozen_lake/">FrozenLake</a>に実装して見ましょう．</p>
+<p>まずは，方策(ここでは決定的方策<span class="math notranslate nohighlight">\(\mu\)</span>)に対してベルマン方程式を解く関数を実装します．ここでは，式<a class="reference internal" href="#equation-bellman-eq-matrix-ver">(3.6)</a>を直接解く方針で価値関数を求めます．</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">solve_bellman_equation</span><span class="p">(</span><span class="n">mu</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;ベルマン方程式を解いて価値関数を求める</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mu : 決定的方策</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        価値関数</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">state_size</span><span class="p">,</span> <span class="n">state_size</span><span class="p">))</span>  <span class="c1"># 確率行列</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">state_size</span><span class="p">,))</span>  <span class="c1"># 報酬ベクトル</span>
+
+    <span class="c1"># 報酬ベクトルと確率行列を求める</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state_size</span><span class="p">):</span>
+        <span class="n">g</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">mu</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state_size</span><span class="p">):</span>
+            <span class="n">P</span><span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">mu</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+
+    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">state_size</span><span class="p">,</span> <span class="n">state_size</span><span class="p">)</span> <span class="o">-</span> <span class="n">GAMMA</span> <span class="o">*</span> <span class="n">P</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">g</span>
+
+    <span class="c1"># 線形方程式を解くことにより価値関数を求める．</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>次に，求めた価値関数から，方策を改善する関数を実装します．</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">improve_policy</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;方策の改善</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        v : 価値関数</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        改善された方策</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">state_size</span><span class="p">,</span> <span class="n">action_size</span><span class="p">))</span>  <span class="c1"># 行動価値関数</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state_size</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">action_size</span><span class="p">):</span>
+            <span class="n">q</span><span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">GAMMA</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">p</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state_size</span><span class="p">)]</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">q</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># 行動価値が最大となる行動を求める</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>これらをもとに任意の決定的方策を方策反復により更新すると以下のようになります．</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">solve_bellman_equation</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">improve_policy</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;v =</span><span class="se">\n</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mu =</span><span class="se">\n</span><span class="si">{</span><span class="n">mu</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>v =
+[ 5.42025932e-01  4.98803187e-01  4.70695691e-01  4.56851700e-01
+  5.58450960e-01  0.00000000e+00  3.58348072e-01 -3.24961973e-15
+  5.91798745e-01  6.43079825e-01  6.15207558e-01  0.00000000e+00
+  0.00000000e+00  7.41720439e-01  8.62837430e-01  0.00000000e+00]
+mu =
+[0 3 3 3 0 0 0 0 3 1 0 0 0 2 1 0]
+</pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -624,6 +1049,13 @@ P_\pi = \left(
             <p class="prev-next-subtitle">previous</p>
             <p class="prev-next-title"><span class="section-number">2. </span>価値関数</p>
         </div>
+    </a>
+    <a class='right-next' id="next-link" href="04q-learning.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Q-learning</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
     </a>
 </div>
             
