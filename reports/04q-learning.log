@@ -17,48 +17,49 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-%matplotlib inline
-import matplotlib.pyplot as plt
+def plot_policy(mu):
+    fig, ax = plt.subplots(figsize=(4, 4))
+    ax.set_xlim(-1, 9)
+    ax.set_ylim(-1, 9)
 
-performance_log = []
+    for i in range(5):
+        ax.plot([i * 2, i * 2], [0, 8], color="b")
+        ax.plot([0, 8], [i * 2, i * 2], color="b")
 
-state = env.reset()
+    dx = [-1, 0, 1, 0]
+    dy = [0, -1, 0, 1]
 
-for _ in range(5000):
-    action = policy_eps_greedy(state, q, EPSILON)
-    next_state, reward, done, _ = env.step(action)
-    n[state, action] += 1
-    alpha = 1.0 / n[state, action]  # ステップサイズ
-    q[state, action] = q[state, action] + alpha * (
-        reward + GAMMA * (1 - done) * np.max(q[next_state, :]) - q[state, action]
-    )
+    for i in range(4):
+        for j in range(4):
+            n = i * 4 + j
+            x = 1 + j * 2
+            y = 7 - i * 2
+            a = mu[n]
+            ax.arrow(
+                x,
+                y,
+                dx[a],
+                dy[a],
+                head_width=0.3,
+                head_length=0.2,
+                length_includes_head=True,
+            )
 
-    if step % 100 == 0:
-        performance_log.append(check_performance(env, q))
+    ax.axis("equal")
+    plt.show()
 
-    if done:
-        state = env.reset()
-    else:
-        state = next_state
 
-print(q)
-
-plt.plot(performance_log)
-plt.show()
+plot_policy(mu)
 
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mNameError[0m                                 Traceback (most recent call last)
-Input [0;32mIn [5][0m, in [0;36m<cell line: 8>[0;34m()[0m
-[1;32m     12[0m alpha [38;5;241m=[39m [38;5;241m1.0[39m [38;5;241m/[39m n[state, action]  [38;5;66;03m# ステップサイズ[39;00m
-[1;32m     13[0m q[state, action] [38;5;241m=[39m q[state, action] [38;5;241m+[39m alpha [38;5;241m*[39m (
-[1;32m     14[0m     reward [38;5;241m+[39m GAMMA [38;5;241m*[39m ([38;5;241m1[39m [38;5;241m-[39m done) [38;5;241m*[39m np[38;5;241m.[39mmax(q[next_state, :]) [38;5;241m-[39m q[state, action]
-[1;32m     15[0m )
-[0;32m---> 17[0m [38;5;28;01mif[39;00m [43mstep[49m [38;5;241m%[39m [38;5;241m100[39m [38;5;241m==[39m [38;5;241m0[39m:
-[1;32m     18[0m     performance_log[38;5;241m.[39mappend(check_performance(env, q))
-[1;32m     20[0m [38;5;28;01mif[39;00m done:
+Input [0;32mIn [7][0m, in [0;36m<cell line: 33>[0;34m()[0m
+[1;32m     29[0m     ax[38;5;241m.[39maxis([38;5;124m"[39m[38;5;124mequal[39m[38;5;124m"[39m)
+[1;32m     30[0m     plt[38;5;241m.[39mshow()
+[0;32m---> 33[0m plot_policy([43mmu[49m)
 
-[0;31mNameError[0m: name 'step' is not defined
-NameError: name 'step' is not defined
+[0;31mNameError[0m: name 'mu' is not defined
+NameError: name 'mu' is not defined
 

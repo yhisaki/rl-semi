@@ -499,7 +499,7 @@ $$v = B_\pi(v), \forall s \in \mathcal{S}$$
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f27f012e2e0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f2a140d02e0&gt;
 </pre></div>
 </div>
 <img alt="../_images/03bellman_2_1.png" src="../_images/03bellman_2_1.png" />
@@ -841,9 +841,15 @@ v^*(s) &amp;= \max_{a \in \mathcal{A}} q^*(s,a)\\
 <p>を紹介します．</p>
 <div class="section" id="id10">
 <h3><span class="section-number">3.3.1. </span>価値反復<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
-<p>この手法の基本的な方針は，式<a class="reference internal" href="#equation-bellman-opt-v">(3.7)</a>のベルマン最適方程式を解いて，式<a class="reference internal" href="#equation-opt-policy">(3.9)</a>により，最適価値関数から最適方策を導くというものです．
+<p>この手法の基本的な方針は，</p>
+<ul class="simple">
+<li><p>式<a class="reference internal" href="#equation-bellman-opt-v">(3.7)</a>のベルマン最適方程式を解いて，</p></li>
+<li><p>式<a class="reference internal" href="#equation-opt-policy">(3.9)</a>により，最適価値関数から最適方策を導く</p></li>
+</ul>
+<p>というものです．
 まず最初のベルマン最適方程式の求解に関して，<a class="reference internal" href="#solve-bellman-operator"><span class="std std-ref">ベルマン方程式を解く手法</span></a>と同様，直接解くか，任意の関数に<span class="math notranslate nohighlight">\(B_*\)</span>を繰り返し適用するかの2通りの手法が考えられます．
-しかし，ベルマン最適作用素は単純な線形変換ではなく<span class="math notranslate nohighlight">\(\max_{a\in\mathcal{A}}\cdots\)</span>と，最大値をとる操作があるため，<span class="math notranslate nohighlight">\(B_*\)</span>を繰り返し適用する手法以外の選択肢しかありません．</p>
+しかし，ベルマン最適作用素は単純な線形変換ではなく<span class="math notranslate nohighlight">\(\max_{a\in\mathcal{A}}\cdots\)</span>と，最大値をとる操作があるため，方程式は直接解けません．
+なので<span class="math notranslate nohighlight">\(B_*\)</span>を繰り返し適用する方針で解を求めていきます．</p>
 <p>それでは，価値反復を<a class="reference external" href="https://www.gymlibrary.ml/environments/toy_text/frozen_lake/">FrozenLake</a>に実装して見ましょう．</p>
 <p>まずは，ベルマン最適作用素を関数として実装します．</p>
 <div class="cell docutils container">
@@ -921,6 +927,48 @@ mu =
 [0 3 3 3 0 0 0 0 3 1 0 0 0 2 1 0]
 </pre></div>
 </div>
+</div>
+</div>
+<p>得られた方策は以下のようになります．</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_policy</span><span class="p">(</span><span class="n">mu</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+
+    <span class="n">dx</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">j</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="mi">2</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="mi">7</span> <span class="o">-</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">2</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">mu</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span>
+                <span class="n">x</span><span class="p">,</span>
+                <span class="n">y</span><span class="p">,</span>
+                <span class="n">dx</span><span class="p">[</span><span class="n">a</span><span class="p">],</span>
+                <span class="n">dy</span><span class="p">[</span><span class="n">a</span><span class="p">],</span>
+                <span class="n">head_width</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+                <span class="n">head_length</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                <span class="n">length_includes_head</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">plot_policy</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/03bellman_21_0.png" src="../_images/03bellman_21_0.png" />
 </div>
 </div>
 </div>
@@ -1012,6 +1060,17 @@ mu =
 [0 3 3 3 0 0 0 0 3 1 0 0 0 2 1 0]
 </pre></div>
 </div>
+</div>
+</div>
+<p>得られた方策は以下のようになります．</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_policy</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/03bellman_29_0.png" src="../_images/03bellman_29_0.png" />
 </div>
 </div>
 </div>
