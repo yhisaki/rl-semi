@@ -4,3 +4,5 @@ numpy
 gym
 gym-notebook-wrapper
 pygame
+torch
+sphinx_proof
