@@ -12,3 +12,10 @@ parts:
       - file: day1/02value_function.ipynb
       - file: day1/03bellman.ipynb
       - file: day1/04q-learning.ipynb
+
+  - caption: Day2
+    numbered: True
+    chapters:
+      - file: day2/01ddpg.md
+      - file: day2/02nn.ipynb
+      - file: day2/03ddpg_implement.ipynb
