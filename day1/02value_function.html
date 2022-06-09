@@ -4,11 +4,13 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>2. 価値関数 &#8212; 強化学習新人ゼミ2022</title>
     
-  <link href="../_static/css/theme.css" rel="stylesheet">
-  <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,21 +20,17 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
-  <link rel="preload" as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -40,12 +38,13 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script src="../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -65,7 +64,21 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -74,9 +87,10 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="../index.html">
       
       
@@ -86,17 +100,18 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
   <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="この本を検索..." aria-label="この本を検索..." autocomplete="off" >
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../intro.html">
-   はじめに
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    はじめに
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Day1
  </span>
@@ -123,109 +138,233 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
 </ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Day2
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../day2/01ddpg.html">
+   5. DDPG
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../day2/02nn.html">
+   6. ニューラルネットワーク
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../day2/03ddpg_implement.html">
+   7. DDPG の実装
+  </a>
+ </li>
+</ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
             
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="ナビゲーションを切り替え" aria-controls="site-navigation"
-                title="ナビゲーションを切り替え" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="このページをダウンロード"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../_sources/day1/02value_function.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="ソースファイルをダウンロード" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="PDFに印刷"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/executablebooks/jupyter-book"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="ソースリポジトリ"><i
-                    class="fab fa-github"></i>リポジトリ</button></a>
-        <a class="issues-button"
-            href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fday1/02value_function.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="問題を開く"><i class="fas fa-lightbulb"></i>未解決の問題</button></a>
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="全画面モード"
-        title="全画面モード"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/docs/day1/02value_function.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="発売 Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="../_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        
-    </div>
-</div>
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> 目次
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/docs/day1/02value_function.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/executablebooks/jupyter-book"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fday1/02value_function.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/day1/02value_function.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id2">
    2.1. 定義
@@ -255,12 +394,11 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
 </ul>
 
-            </nav>
-        </div>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
                 <h1>価値関数</h1>
@@ -269,7 +407,7 @@ const thebe_selector_output = ".output, .cell_output"
                     <div id="jb-print-toc">
                         
                         <div>
-                            <h2> 目次 </h2>
+                            <h2> Contents </h2>
                         </div>
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
@@ -306,11 +444,12 @@ const thebe_selector_output = ".output, .cell_output"
                     </div>
                 </div>
             </div>
-            
+            <main id="main-content" role="main">
+                
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
-<h1><span class="section-number">2. </span>価値関数<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">2. </span>価値関数<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h1>
 <div class="math notranslate nohighlight">
 \[\newcommand{\E}{{\mathrm E}}
 \newcommand{\underE}[2]{\underset{\begin{subarray}{c}#1 \end{subarray}}{\E}\left[ #2 \right]}
@@ -318,27 +457,27 @@ const thebe_selector_output = ".output, .cell_output"
 <p>本章では，価値関数/行動価値関数というものについて見ていきます．
 価値関数/行動価値関数とは直感的に捉えると，ある状態<span class="math notranslate nohighlight">\(s\)</span>や状態行動対<span class="math notranslate nohighlight">\((s,a)\)</span>が，どのくらいの価値を持つかを表すものです．
 これらは強化学習理論の基礎となる，非常に重要な関数となっています．</p>
-<div class="section" id="id2">
-<h2><span class="section-number">2.1. </span>定義<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<section id="id2">
+<h2><span class="section-number">2.1. </span>定義<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h2>
 <p>まずは，一般的に用いられる価値関数/行動価値関数の定義を確認します．</p>
 <ul>
 <li><p>価値関数(Value Function)</p>
 <div class="math notranslate nohighlight" id="equation-vpi-difinition">
-<span class="eqno">(2.1)<a class="headerlink" href="#equation-vpi-difinition" title="Permalink to this equation">¶</a></span>\[V^\pi(s) = \underE{\pi}{G_t | S_t = s}\]</div>
+<span class="eqno">(2.1)<a class="headerlink" href="#equation-vpi-difinition" title="Permalink to this equation">#</a></span>\[V^\pi(s) = \underE{\pi}{G_t | S_t = s}\]</div>
 </li>
 <li><p>行動価値関数(Action Value Function)</p>
 <div class="math notranslate nohighlight" id="equation-qpi-definition">
-<span class="eqno">(2.2)<a class="headerlink" href="#equation-qpi-definition" title="Permalink to this equation">¶</a></span>\[Q^\pi(s,a) = \underE{\pi}{G_t | S_t = s, A_t = a}\]</div>
+<span class="eqno">(2.2)<a class="headerlink" href="#equation-qpi-definition" title="Permalink to this equation">#</a></span>\[Q^\pi(s,a) = \underE{\pi}{G_t | S_t = s, A_t = a}\]</div>
 </li>
 </ul>
 <p>定義より，価値関数<span class="math notranslate nohighlight">\(V^\pi(s)\)</span>は「ある状態<span class="math notranslate nohighlight">\(s\)</span>から方策<span class="math notranslate nohighlight">\(\pi\)</span>に従って行動した場合の得られる期待割引累積報酬」と解釈できます．
 また，行動価値関数は「ある状態<span class="math notranslate nohighlight">\(s\)</span>で，ある行動<span class="math notranslate nohighlight">\(a\)</span>を取った後，方策<span class="math notranslate nohighlight">\(\pi\)</span>に従って行動した場合の得られる期待割引累積報酬」と解釈できます．</p>
-<p>２つの違いは，価値関数<span class="math notranslate nohighlight">\(V^\pi(s)\)</span>は最初の行動<span class="math notranslate nohighlight">\(A_0\)</span>が方策に従ってサンプルされるのに対して，行動価値関数<span class="math notranslate nohighlight">\(Q^\pi(s,a)\)</span>では<span class="math notranslate nohighlight">\(A_0\)</span>が引数によって与えられるという点です．なので，2 つの関数には以下の関係が成り立ちます．</p>
+<p>２つの違いは，価値関数<span class="math notranslate nohighlight">\(V^\pi(s)\)</span>は最初の行動<span class="math notranslate nohighlight">\(A_t\)</span>が方策に従ってサンプルされるのに対して，行動価値関数<span class="math notranslate nohighlight">\(Q^\pi(s,a)\)</span>では<span class="math notranslate nohighlight">\(A_t\)</span>が引数によって与えられるという点です．なので，2 つの関数には以下の関係が成り立ちます．</p>
 <div class="math notranslate nohighlight" id="equation-vpi-qpi-relation">
-<span class="eqno">(2.3)<a class="headerlink" href="#equation-vpi-qpi-relation" title="Permalink to this equation">¶</a></span>\[V^\pi(s) = \underE{a \sim \pi}{Q^\pi(s, a)}\]</div>
-</div>
-<div class="section" id="id3">
-<h2><span class="section-number">2.2. </span>モンテカルロ法による価値関数/行動価値関数の推定<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<span class="eqno">(2.3)<a class="headerlink" href="#equation-vpi-qpi-relation" title="Permalink to this equation">#</a></span>\[V^\pi(s) = \underE{a \sim \pi}{Q^\pi(s, a)}\]</div>
+</section>
+<section id="id3">
+<h2><span class="section-number">2.2. </span>モンテカルロ法による価値関数/行動価値関数の推定<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h2>
 <p>価値関数/行動価値関数の定義から，</p>
 <ol class="simple">
 <li><p>方策<span class="math notranslate nohighlight">\(\pi\)</span>から<span class="math notranslate nohighlight">\(G_t\)</span>の値をサンプルする．</p></li>
@@ -347,8 +486,8 @@ const thebe_selector_output = ".output, .cell_output"
 <p>という非常にシンプルな推定方法を考えることが出来ます．
 このようなコンセプトを持った手法はモンテカルロ法と言われています．</p>
 <p>実際にモンテカルロ法をシミュレーションに適用する様子を見ていきましょう．</p>
-<div class="section" id="id4">
-<h3><span class="section-number">2.2.1. </span>実験設定<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<section id="id4">
+<h3><span class="section-number">2.2.1. </span>実験設定<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h3>
 <p>環境として，OpenAI Gym の<a class="reference external" href="https://www.gymlibrary.ml/environments/toy_text/frozen_lake/">FrozenLake</a>を用います．
 この環境では状態空間が各マスに対応した<span class="math notranslate nohighlight">\(\mathcal{S} = \{0,1,\cdots,15\}\)</span>，行動空間が進む向きに対応した<span class="math notranslate nohighlight">\(\mathcal{A} = \{0,1,2,3\}\)</span>となっており，スタート地点からLakeに落ちずにゴール地点にたどり着くことを目的としています．
 環境に関する設定は，ドキュメントを参照してください．</p>
@@ -371,7 +510,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f84cc160640&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f7f5cc6f520&gt;
 </pre></div>
 </div>
 <img alt="../_images/02value_function_2_1.png" src="../_images/02value_function_2_1.png" />
@@ -404,9 +543,9 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="id5">
-<h3><span class="section-number">2.2.2. </span>経験データの収集<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id5">
+<h3><span class="section-number">2.2.2. </span>経験データの収集<a class="headerlink" href="#id5" title="Permalink to this headline">#</a></h3>
 <p>ここから，実際の環境から方策を用いて，経験を収集する関数を作っていきます．
 ここで，経験とはエージェントが環境と相互作用し，得られる状態/行動/報酬の履歴</p>
 <div class="math notranslate nohighlight">
@@ -457,9 +596,9 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="id6">
-<h3><span class="section-number">2.2.3. </span>行動価値の推定<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id6">
+<h3><span class="section-number">2.2.3. </span>行動価値の推定<a class="headerlink" href="#id6" title="Permalink to this headline">#</a></h3>
 <p>FrozenLake 環境におけるランダム方策の行動価値関数を推定していきます．
 価値関数に関しては式<a class="reference internal" href="#equation-vpi-qpi-relation">(2.3)</a>より，</p>
 <div class="math notranslate nohighlight">
@@ -519,7 +658,7 @@ key が状態行動対<span class="math notranslate nohighlight">\((S_t = s,A_t 
 各更新ループの一番最初でエピソード 1 つ分を収集します．</p>
 <p>そこで得られた配列から，割引累積報酬<span class="math notranslate nohighlight">\(G_t\)</span>を計算します．ここで，<span class="math notranslate nohighlight">\(G_t\)</span>の定義式<a class="reference internal" href="01what_is_rl.html#equation-g-t">(1.3)</a>より</p>
 <div class="math notranslate nohighlight" id="equation-g-t-recursion">
-<span class="eqno">(2.4)<a class="headerlink" href="#equation-g-t-recursion" title="Permalink to this equation">¶</a></span>\[G_{t} = R_t + \gamma G_{t+1}\]</div>
+<span class="eqno">(2.4)<a class="headerlink" href="#equation-g-t-recursion" title="Permalink to this equation">#</a></span>\[G_{t} = R_t + \gamma G_{t+1}\]</div>
 <p>のような時間方向後ろ向きに再帰的な関係関係を満たすため，これを利用し<span class="math notranslate nohighlight">\(G_{t}\)</span>を求めます．</p>
 <p><span class="math notranslate nohighlight">\(Q(s,a)\)</span>は定義式<a class="reference internal" href="#equation-qpi-definition">(2.2)</a>から<code class="docutils literal notranslate"><span class="pre">returns[state,</span> <span class="pre">action]</span> <span class="pre">=</span> <span class="pre">[G0,</span> <span class="pre">G1,</span> <span class="pre">...]</span></code>の平均値をとって推定します．</p>
 <div class="cell docutils container">
@@ -546,21 +685,21 @@ key が状態行動対<span class="math notranslate nohighlight">\((S_t = s,A_t 
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>q =
-[[0.01594675 0.0102825  0.01547044 0.00752259]
- [0.00616216 0.00878811 0.01608635 0.00980606]
- [0.02168909 0.02690701 0.02178133 0.00803505]
- [0.02431889 0.0318647  0.01255307 0.02926123]
- [0.01214209 0.00935329 0.01537834 0.00824959]
+[[0.01721339 0.0133105  0.01528359 0.01393266]
+ [0.0114799  0.01563866 0.01073324 0.01361778]
+ [0.02700434 0.0152803  0.02516211 0.01210732]
+ [0.         0.02564345 0.         0.01159464]
+ [0.03896822 0.01686651 0.01019688 0.01398076]
  [0.         0.         0.         0.        ]
- [0.0693094  0.07242155 0.08516537 0.        ]
+ [0.08215712 0.09048472 0.02050544 0.02910897]
  [0.         0.         0.         0.        ]
- [0.00688474 0.04362722 0.02896232 0.05475294]
- [0.04688596 0.09601756 0.10998265 0.13331415]
- [0.28276785 0.19071108 0.13621034 0.1873002 ]
+ [0.02495286 0.03837015 0.02597843 0.03745534]
+ [0.02882647 0.09150382 0.09907741 0.04216755]
+ [0.11251265 0.22174311 0.17652351 0.033124  ]
  [0.         0.         0.         0.        ]
  [0.         0.         0.         0.        ]
- [0.049005   0.1072384  0.2974864  0.        ]
- [0.27768494 0.4930696  0.69212322 0.46831066]
+ [0.11472935 0.28144286 0.3049039  0.2827196 ]
+ [0.33257015 0.60776115 0.35288564 0.60513723]
  [0.         0.         0.         0.        ]]
 </pre></div>
 </div>
@@ -576,16 +715,16 @@ key が状態行動対<span class="math notranslate nohighlight">\((S_t = s,A_t 
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>v =
-[0.01230557 0.01021067 0.01960312 0.02449947 0.01128083 0.
- 0.05672408 0.         0.03355681 0.09655008 0.19924737 0.
- 0.         0.11343245 0.4827971  0.        ]
+[0.01493504 0.0128674  0.01988852 0.00930952 0.02000309 0.
+ 0.05556406 0.         0.03168919 0.06539381 0.13597582 0.
+ 0.         0.24594893 0.47458854 0.        ]
 </pre></div>
 </div>
 </div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -609,9 +748,11 @@ key が状態行動対<span class="math notranslate nohighlight">\((S_t = s,A_t 
 
               </div>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
     <a class='left-prev' id="prev-link" href="01what_is_rl.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -627,24 +768,28 @@ key が状態行動対<span class="math notranslate nohighlight">\((S_t = s,A_t 
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-  <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Yukinari Hisaki<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
     
-      著者 Yukinari Hisaki<br/>
-    
-        &copy; Copyright 2021.<br/>
-  </p>
-</footer>
-</main>
+</div>
 
 
       </div>
     </div>
   
-  <script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>

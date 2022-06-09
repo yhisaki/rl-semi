@@ -4,11 +4,13 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>3. ベルマン方程式 &#8212; 強化学習新人ゼミ2022</title>
     
-  <link href="../_static/css/theme.css" rel="stylesheet">
-  <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,21 +20,17 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
-  <link rel="preload" as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -40,12 +38,13 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script src="../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -65,7 +64,21 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -74,9 +87,10 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="../index.html">
       
       
@@ -86,17 +100,18 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
   <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="この本を検索..." aria-label="この本を検索..." autocomplete="off" >
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../intro.html">
-   はじめに
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    はじめに
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Day1
  </span>
@@ -123,109 +138,233 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
 </ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Day2
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../day2/01ddpg.html">
+   5. DDPG
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../day2/02nn.html">
+   6. ニューラルネットワーク
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../day2/03ddpg_implement.html">
+   7. DDPG の実装
+  </a>
+ </li>
+</ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
             
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="ナビゲーションを切り替え" aria-controls="site-navigation"
-                title="ナビゲーションを切り替え" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="このページをダウンロード"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../_sources/day1/03bellman.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="ソースファイルをダウンロード" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="PDFに印刷"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/executablebooks/jupyter-book"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="ソースリポジトリ"><i
-                    class="fab fa-github"></i>リポジトリ</button></a>
-        <a class="issues-button"
-            href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fday1/03bellman.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="問題を開く"><i class="fas fa-lightbulb"></i>未解決の問題</button></a>
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="全画面モード"
-        title="全画面モード"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/docs/day1/03bellman.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="発売 Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="../_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        
-    </div>
-</div>
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> 目次
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/docs/day1/03bellman.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/executablebooks/jupyter-book"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fday1/03bellman.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/day1/03bellman.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id2">
    3.1. ベルマン方程式
@@ -284,12 +423,11 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
 </ul>
 
-            </nav>
-        </div>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
                 <h1>ベルマン方程式</h1>
@@ -298,7 +436,7 @@ const thebe_selector_output = ".output, .cell_output"
                     <div id="jb-print-toc">
                         
                         <div>
-                            <h2> 目次 </h2>
+                            <h2> Contents </h2>
                         </div>
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
@@ -364,11 +502,12 @@ const thebe_selector_output = ".output, .cell_output"
                     </div>
                 </div>
             </div>
-            
+            <main id="main-content" role="main">
+                
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="id1">
-<h1><span class="section-number">3. </span>ベルマン方程式<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1><span class="section-number">3. </span>ベルマン方程式<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h1>
 <div class="math notranslate nohighlight">
 \[\DeclareMathOperator*{\argmax}{arg\,max}
 \newcommand{\E}{{\mathrm E}}
@@ -377,11 +516,11 @@ const thebe_selector_output = ".output, .cell_output"
 <p>本章では，価値関数/行動価値関数が満たす再帰的な性質を基にした <strong>ベルマン方程式(Bellman equation)</strong> を紹介します．
 この方程式は，現在の状態<span class="math notranslate nohighlight">\(s\)</span>の価値<span class="math notranslate nohighlight">\(V(s)\)</span>と次の状態<span class="math notranslate nohighlight">\(s'\)</span>の価値<span class="math notranslate nohighlight">\(V(s')\)</span>の関係に着目することにより得られる方程式で，
 様々な強化学習アルゴリズムで利用されています．</p>
-<div class="section" id="id2">
-<h2><span class="section-number">3.1. </span>ベルマン方程式<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<section id="id2">
+<h2><span class="section-number">3.1. </span>ベルマン方程式<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h2>
 <p>価値関数の定義式<a class="reference internal" href="02value_function.html#equation-vpi-difinition">(2.1)</a>と<span class="math notranslate nohighlight">\(G_t\)</span>に関する再帰的な式<a class="reference internal" href="02value_function.html#equation-g-t-recursion">(2.4)</a>より以下のような式変形が行えます．</p>
 <div class="math notranslate nohighlight" id="equation-v-expansion">
-<span class="eqno">(3.1)<a class="headerlink" href="#equation-v-expansion" title="Permalink to this equation">¶</a></span>\[\begin{split}
+<span class="eqno">(3.1)<a class="headerlink" href="#equation-v-expansion" title="Permalink to this equation">#</a></span>\[\begin{split}
 V^\pi(s) &amp;= \underE{\pi}{G_t | S_t = s}\\
 &amp;= \underE{\pi}{R_t + \gamma G_{t+1} | S_t = s}\\
 &amp;= \sum_{a \in \mathcal{A}} \pi(a|s) \left(r(s, a) + \gamma  \sum_{s' \in \mathcal{S}}  p(s'|s,a) \underE{\pi}{ G_{t+1} | S_{t+1} = s' }\right)\\
@@ -390,17 +529,17 @@ V^\pi(s) &amp;= \underE{\pi}{G_t | S_t = s}\\
 <p>この式変形は直感的に，「現在の状態の価値 ＝ （即時報酬 ＋ 次の状態の価値）の期待値」としたものであると捉えることが出来ます．</p>
 <p>同様の式変形を行動価値関数に関しても適用できます．</p>
 <div class="math notranslate nohighlight" id="equation-q-expansion">
-<span class="eqno">(3.2)<a class="headerlink" href="#equation-q-expansion" title="Permalink to this equation">¶</a></span>\[\begin{split}Q^\pi(s,a) &amp;= \underE{\pi}{G_t | S_t = s, A_t = a}\\
+<span class="eqno">(3.2)<a class="headerlink" href="#equation-q-expansion" title="Permalink to this equation">#</a></span>\[\begin{split}Q^\pi(s,a) &amp;= \underE{\pi}{G_t | S_t = s, A_t = a}\\
 &amp;= \underE{\pi}{R_t + \gamma G_{t+1} | S_t = s, A_t = a}\\
 &amp;= r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) \sum_{a' \in \mathcal{A}} \pi(a'|s') Q^\pi(s', a'), \forall s \in \mathcal{S}, a \in \mathcal{A}\end{split}\]</div>
 <p>これらの式変形より，<span class="math notranslate nohighlight">\(V^\pi\)</span>は関数<span class="math notranslate nohighlight">\(v : \mathcal{S} \rightarrow \mathbb{R}\)</span>に関する方程式</p>
 <div class="math notranslate nohighlight" id="equation-bellman-v">
-<span class="eqno">(3.3)<a class="headerlink" href="#equation-bellman-v" title="Permalink to this equation">¶</a></span>\[v(s)
+<span class="eqno">(3.3)<a class="headerlink" href="#equation-bellman-v" title="Permalink to this equation">#</a></span>\[v(s)
 =\sum_{a \in \mathcal{A}} \pi(a|s) \left( r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a)v(s') \right), \forall s \in \mathcal{S}\]</div>
 <p>の解であることがわかり，
 <span class="math notranslate nohighlight">\(Q^\pi\)</span>は関数<span class="math notranslate nohighlight">\(q : \mathcal{S} \times \mathcal{A} \rightarrow \mathbb{R}\)</span>に関する方程式</p>
 <div class="math notranslate nohighlight" id="equation-bellman-q">
-<span class="eqno">(3.4)<a class="headerlink" href="#equation-bellman-q" title="Permalink to this equation">¶</a></span>\[q(s,a)
+<span class="eqno">(3.4)<a class="headerlink" href="#equation-bellman-q" title="Permalink to this equation">#</a></span>\[q(s,a)
 = r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) \sum_{a' \in \mathcal{A}} \pi(a'|s') q(s', a'), \forall s \in \mathcal{S}, a \in \mathcal{A}\]</div>
 <p>の解であることがわかります．
 方程式<a class="reference internal" href="#equation-bellman-v">(3.3)</a>,<a class="reference internal" href="#equation-bellman-q">(3.4)</a>はベルマン方程式と呼ばれています．</p>
@@ -409,11 +548,11 @@ V^\pi(s) &amp;= \underE{\pi}{G_t | S_t = s}\\
 <font color='red'><span class="math notranslate nohighlight">\(V^\pi,Q^\pi\)</span>を求める問題を方程式<a class="reference internal" href="#equation-bellman-v">(3.3)</a>,<a class="reference internal" href="#equation-bellman-q">(3.4)</a>の解を求める問題と捉えることが出来る</font>ことです．</p>
 <p>また，式<a class="reference internal" href="02value_function.html#equation-vpi-qpi-relation">(2.3)</a>の結果と式<a class="reference internal" href="#equation-q-expansion">(3.2)</a>より</p>
 <div class="math notranslate nohighlight" id="equation-vpi-qpi-relation2">
-<span class="eqno">(3.5)<a class="headerlink" href="#equation-vpi-qpi-relation2" title="Permalink to this equation">¶</a></span>\[\begin{split}Q^\pi(s,a) &amp;= r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) \sum_{a' \in \mathcal{A}} \pi(a'|s') Q^\pi(s', a')\\
+<span class="eqno">(3.5)<a class="headerlink" href="#equation-vpi-qpi-relation2" title="Permalink to this equation">#</a></span>\[\begin{split}Q^\pi(s,a) &amp;= r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) \sum_{a' \in \mathcal{A}} \pi(a'|s') Q^\pi(s', a')\\
 &amp; = r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) V^\pi(s'), \forall s \in \mathcal{S}, a \in \mathcal{A}\end{split}\]</div>
 <p>が成り立つ，つまり，<span class="math notranslate nohighlight">\(V^\pi\)</span>が求まれば<span class="math notranslate nohighlight">\(Q^\pi\)</span>も求まるため本節では主に価値関数についてのみ扱います．</p>
-<div class="section" id="id3">
-<h3><span class="section-number">3.1.1. </span>ベルマン作用素<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<section id="id3">
+<h3><span class="section-number">3.1.1. </span>ベルマン作用素<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h3>
 <p>ベルマン方程式をより深く分析するため，ベルマン方程式を基にした <strong>ベルマン作用素(Bellman operator)</strong> というものを導入します．</p>
 <p>ベルマン作用素は，ある関数<span class="math notranslate nohighlight">\(v : \mathcal{S} \rightarrow \mathbb{R}\)</span>に対する写像<span class="math notranslate nohighlight">\(B_\pi: \mathbb{R}^{|\mathcal{S}|} \rightarrow \mathbb{R}^{|\mathcal{S}|}\)</span>であり，</p>
 <div class="math notranslate nohighlight">
@@ -445,7 +584,7 @@ $$v = B_\pi(v), \forall s \in \mathcal{S}$$
 ``` -->
 <div class="proof proposition admonition" id="b_pi_fixed_point">
 <p class="admonition-title"><span class="caption-number">Proposition 3.1 </span></p>
-<div class="proposition-content section" id="proof-content">
+<section class="proposition-content" id="proof-content">
 <p>ベルマン作用素<span class="math notranslate nohighlight">\(B_\pi\)</span>は，</p>
 <div class="math notranslate nohighlight">
 \[v^* = B_\pi(v^*), \forall s \in \mathcal{S}\]</div>
@@ -454,7 +593,7 @@ $$v = B_\pi(v), \forall s \in \mathcal{S}$$
 に対して$B_\piを繰り返し適用すると漸近的に不動点に等しくなる．</p>
 <div class="math notranslate nohighlight">
 \[v^*(s) = \lim_{k\rightarrow \infty} (B_\pi^k(v_0))(s), \forall s \in \mathcal{S}\]</div>
-</div>
+</section>
 </div><div class="proof admonition" id="proof">
 <p>Proof. <span class="math notranslate nohighlight">\(B_\pi\)</span>が最大ノルムに対して縮小写像であることを示すことを示すことにより，
 <a class="reference external" href="https://ja.wikipedia.org/wiki/%E3%83%90%E3%83%8A%E3%83%83%E3%83%8F%E3%81%AE%E4%B8%8D%E5%8B%95%E7%82%B9%E5%AE%9A%E7%90%86">バナッハの不動点定理</a>より，
@@ -469,9 +608,9 @@ $$v = B_\pi(v), \forall s \in \mathcal{S}$$
 <li><p>任意の関数<span class="math notranslate nohighlight">\(v\)</span>に対して<span class="math notranslate nohighlight">\(B_\pi\)</span>を繰り返し適用する</p></li>
 </ol>
 <p>の2通り方法で<span class="math notranslate nohighlight">\(V^\pi\)</span>を得ることが出来ます．</p>
-</div>
-<div class="section" id="id4">
-<h3><span class="section-number">3.1.2. </span>実装<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id4">
+<h3><span class="section-number">3.1.2. </span>実装<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h3>
 <p>本節では，前節のコンセプトを基にした手法の実装を示し，
 実際に<a class="reference external" href="https://www.gymlibrary.ml/environments/toy_text/frozen_lake/">FrozenLake</a>環境に適用してみます．</p>
 <div class="cell docutils container">
@@ -499,7 +638,7 @@ $$v = B_\pi(v), \forall s \in \mathcal{S}$$
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f2a140d02e0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f182988d1c0&gt;
 </pre></div>
 </div>
 <img alt="../_images/03bellman_2_1.png" src="../_images/03bellman_2_1.png" />
@@ -544,7 +683,7 @@ P_\pi = \left(
 \end{split}\]</div>
 <p>これらの行列を用いてベルマン方程式<a class="reference internal" href="#equation-bellman-v">(3.3)</a>を書き表すと，</p>
 <div class="math notranslate nohighlight" id="equation-bellman-eq-matrix-ver">
-<span class="eqno">(3.6)<a class="headerlink" href="#equation-bellman-eq-matrix-ver" title="Permalink to this equation">¶</a></span>\[v = g + \gamma P_\pi v\]</div>
+<span class="eqno">(3.6)<a class="headerlink" href="#equation-bellman-eq-matrix-ver" title="Permalink to this equation">#</a></span>\[v = g + \gamma P_\pi v\]</div>
 <p>となり，一般的な行列計算として実装上でも扱いやすい形となります．</p>
 <p><a class="reference external" href="https://www.gymlibrary.ml/environments/toy_text/frozen_lake/">FrozenLake</a>環境において，行動を一様ランダムに選択，つまり<span class="math notranslate nohighlight">\(\pi(a|s) = \frac{1}{4}\)</span>とした場合の環境情報<span class="math notranslate nohighlight">\(g, P_\pi\)</span>を求めると以下のようになります．</p>
 <div class="cell docutils container">
@@ -654,7 +793,7 @@ P_\pi = \left(
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>v1 =
 [ 1.23561373e-02  1.04244610e-02  1.93384359e-02  9.47774828e-03
-  1.47870516e-02 -2.28588108e-16  3.88944494e-02 -6.52373983e-16
+  1.47870516e-02 -2.05729297e-16  3.88944494e-02 -8.26986330e-16
   3.26024740e-02  8.43376421e-02  1.37810854e-01  0.00000000e+00
  -2.05408145e-16  1.70344822e-01  4.33579442e-01  0.00000000e+00]
 </pre></div>
@@ -711,35 +850,35 @@ P_\pi = \left(
 <img alt="../_images/03bellman_13_0.png" src="../_images/03bellman_13_0.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="bellman-opt-eq">
-<span id="id5"></span><h2><span class="section-number">3.2. </span>ベルマン最適方程式<a class="headerlink" href="#bellman-opt-eq" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="bellman-opt-eq">
+<span id="id5"></span><h2><span class="section-number">3.2. </span>ベルマン最適方程式<a class="headerlink" href="#bellman-opt-eq" title="Permalink to this headline">#</a></h2>
 <p>これまでは，任意の方策に対する価値関数/ベルマン方程式を見てきました．
 本章では，これまで紹介してきたものを用いて <strong>最適方策</strong> を導入していきます．</p>
-<div class="section" id="id6">
-<h3><span class="section-number">3.2.1. </span>最適方策<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<section id="id6">
+<h3><span class="section-number">3.2.1. </span>最適方策<a class="headerlink" href="#id6" title="Permalink to this headline">#</a></h3>
 <p>最適方策は以下のように定義されます．</p>
 <div class="proof definition admonition" id="optimal_policy">
 <p class="admonition-title"><span class="caption-number">Definition 3.1 </span></p>
-<div class="definition-content section" id="proof-content">
+<section class="definition-content" id="proof-content">
 <p>任意の初期状態<span class="math notranslate nohighlight">\(s \in \mathcal{S}\)</span>からの期待リターンを最大化する方策<span class="math notranslate nohighlight">\(\pi^*\)</span>を最適方策と呼ぶ．
 最適方策<span class="math notranslate nohighlight">\(\pi^*\)</span>の価値関数<span class="math notranslate nohighlight">\(V^{\pi^*}(s) = V^*(s)\)</span>は任意の方策<span class="math notranslate nohighlight">\(\pi\)</span>に対して以下が成り立つ</p>
 <div class="math notranslate nohighlight">
 \[V^*(s) \geq V^\pi(s),\ \forall s\]</div>
-</div>
+</section>
 </div><p>また，最適方策の価値関数 <span class="math notranslate nohighlight">\(V^{\pi^*}(s) = V^*(s)\)</span> を最適価値関数と呼びます．
 この最適方策の定義は，全ての初期状態からの期待リターンを最大化するものであり，
 単一の初期分布からの期待リターンを評価関数とし，それを最大化するだけではないのです．
 しかし，このような条件を満たす最適方策は本当に存在するのでしょうか？
 結論から言うと，最適方策は存在し(これは複数存在する可能性あり)，それらは一意の最適価値関数を持ちます．</p>
 <p>以下それを説明していきます．</p>
-</div>
-<div class="section" id="id7">
-<h3><span class="section-number">3.2.2. </span>ベルマン最適方程式<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id7">
+<h3><span class="section-number">3.2.2. </span>ベルマン最適方程式<a class="headerlink" href="#id7" title="Permalink to this headline">#</a></h3>
 <div class="proof proposition admonition" id="policy_improvement">
 <p class="admonition-title"><span class="caption-number">Proposition 3.2 </span> (方策の改善)</p>
-<div class="proposition-content section" id="proof-content">
+<section class="proposition-content" id="proof-content">
 <p>任意の方策<span class="math notranslate nohighlight">\(\pi\)</span>に対して，</p>
 <div class="math notranslate nohighlight">
 \[\pi'(a|s) = \delta_{a,\mu(s)},\ \ \text{where }
@@ -748,7 +887,7 @@ P_\pi = \left(
 <div class="math notranslate nohighlight">
 \[V^{\pi'}(s) \geq V^\pi(s), \forall s\]</div>
 <p>となる．</p>
-</div>
+</section>
 </div><div class="proof admonition" id="proof">
 <p>Proof. 任意の<span class="math notranslate nohighlight">\(s\in\mathcal{S}\)</span>に対して</p>
 <div class="math notranslate nohighlight">
@@ -769,24 +908,24 @@ V^\pi(s) &amp;\leq Q^\pi(s,\mu(s))\\
 また，状態空間/行動空間が有限であるため方策も有限です．
 そのため，方策を改善し続けると，いつかはそれ以上改善しない方策にたどり着き，その方策の価値関数<span class="math notranslate nohighlight">\(v^*\)</span>に対して</p>
 <div class="math notranslate nohighlight" id="equation-bellman-opt-v">
-<span class="eqno">(3.7)<a class="headerlink" href="#equation-bellman-opt-v" title="Permalink to this equation">¶</a></span>\[\begin{split}
+<span class="eqno">(3.7)<a class="headerlink" href="#equation-bellman-opt-v" title="Permalink to this equation">#</a></span>\[\begin{split}
 v^*(s) &amp;= \max_{a \in \mathcal{A}} q^*(s,a)\\
 &amp;= \max_{a\in\mathcal{A}} \left(r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) v^*(s') \right), \forall s \in \mathcal{S}\end{split}\]</div>
 <p>が成り立つことがわかります．また，行動価値関数に関しても，</p>
 <div class="math notranslate nohighlight" id="equation-bellman-opt-q">
-<span class="eqno">(3.8)<a class="headerlink" href="#equation-bellman-opt-q" title="Permalink to this equation">¶</a></span>\[\begin{split}q^*(s,a) &amp;= r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) v^*(s')\\
+<span class="eqno">(3.8)<a class="headerlink" href="#equation-bellman-opt-q" title="Permalink to this equation">#</a></span>\[\begin{split}q^*(s,a) &amp;= r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) v^*(s')\\
 &amp;= r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) \max_{a' \in \mathcal{A}} q^*(s',a'), \forall s \in \mathcal{S}, a \in \mathcal{A}\end{split}\]</div>
 <p>が成り立ちます．式<a class="reference internal" href="#equation-bellman-opt-v">(3.7)</a>,<a class="reference internal" href="#equation-bellman-opt-q">(3.8)</a>は最適ベルマン方程式と呼ばれます．
 <a class="reference internal" href="#optimal_policy">Definition 3.1</a>から，最適価値関数も最適ベルマン方程式を満たします．</p>
 <p>また，これら方程式を満たす価値関数に対して，</p>
 <div class="math notranslate nohighlight" id="equation-opt-policy">
-<span class="eqno">(3.9)<a class="headerlink" href="#equation-opt-policy" title="Permalink to this equation">¶</a></span>\[\pi^*(a|s) = \delta_{a,\mu^*(s)},\ \ \text{where }
+<span class="eqno">(3.9)<a class="headerlink" href="#equation-opt-policy" title="Permalink to this equation">#</a></span>\[\pi^*(a|s) = \delta_{a,\mu^*(s)},\ \ \text{where }
 \mu^*(s) = \argmax_{a} q^*(s,a)
 \]</div>
 <p>とした方策の価値関数は<span class="math notranslate nohighlight">\(v^*\)</span>になります．</p>
-</div>
-<div class="section" id="id8">
-<h3><span class="section-number">3.2.3. </span>ベルマン最適作用素<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id8">
+<h3><span class="section-number">3.2.3. </span>ベルマン最適作用素<a class="headerlink" href="#id8" title="Permalink to this headline">#</a></h3>
 <p>前節で最適価値関数がベルマン最適方程式を満たすことを示しました．
 本節では前章と同様にベルマン最適方程式をもとにした， <strong>ベルマン最適作用素(Bellman optimality operator)</strong> を導入します．</p>
 <p>ベルマン最適作用素は，ある関数<span class="math notranslate nohighlight">\(v : \mathcal{S} \rightarrow \mathbb{R}\)</span>に対する写像<span class="math notranslate nohighlight">\(B_*: \mathbb{R}^{|\mathcal{S}|} \rightarrow \mathbb{R}^{|\mathcal{S}|}\)</span>であり，</p>
@@ -799,7 +938,7 @@ v^*(s) &amp;= \max_{a \in \mathcal{A}} q^*(s,a)\\
 <p>このベルマン作用素に対して以下の命題が成り立ちます．</p>
 <div class="proof proposition admonition" id="bellman_opt_fixed_point">
 <p class="admonition-title"><span class="caption-number">Proposition 3.3 </span></p>
-<div class="proposition-content section" id="proof-content">
+<section class="proposition-content" id="proof-content">
 <p>ベルマン最適作用素<span class="math notranslate nohighlight">\(B_*\)</span>は，</p>
 <div class="math notranslate nohighlight">
 \[v^* = B_*(v^*), \forall s \in \mathcal{S}\]</div>
@@ -808,7 +947,7 @@ v^*(s) &amp;= \max_{a \in \mathcal{A}} q^*(s,a)\\
 に対して<span class="math notranslate nohighlight">\(B_*\)</span>を繰り返し適用すると漸近的に不動点に等しくなる．</p>
 <div class="math notranslate nohighlight">
 \[v^*(s) = \lim_{k\rightarrow \infty} (B_*^k(v_0))(s), \forall s \in \mathcal{S}\]</div>
-</div>
+</section>
 </div><div class="proof admonition" id="proof">
 <p>Proof. <span class="math notranslate nohighlight">\(B_\pi\)</span>と同様，<span class="math notranslate nohighlight">\(B_*\)</span>が最大ノルムに対して縮小写像であることを示すことを示すことにより，
 <a class="reference external" href="https://ja.wikipedia.org/wiki/%E3%83%90%E3%83%8A%E3%83%83%E3%83%8F%E3%81%AE%E4%B8%8D%E5%8B%95%E7%82%B9%E5%AE%9A%E7%90%86">バナッハの不動点定理</a>より，
@@ -828,10 +967,10 @@ v^*(s) &amp;= \max_{a \in \mathcal{A}} q^*(s,a)\\
 <li><p><span class="math notranslate nohighlight">\(\pi^*(a|s) = \delta_{a,\mu^*(s)},\ \ \text{where }\mu^*(s) = \argmax_{a} Q^*(s,a)\)</span>は最適方策となる</p></li>
 </ol>
 <p>ことがわかります．</p>
-</div>
-</div>
-<div class="section" id="id9">
-<h2><span class="section-number">3.3. </span>動的計画法<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="id9">
+<h2><span class="section-number">3.3. </span>動的計画法<a class="headerlink" href="#id9" title="Permalink to this headline">#</a></h2>
 <p><strong>動的計画法(Dynamic Programing; DP)</strong> とは，対象とするマルコフ過程の完全な情報を用いて最適方策を求める手法を指します．</p>
 <p>本章では<a class="reference internal" href="#bellman-opt-eq"><span class="std std-ref">前章</span></a>をもとに動的計画法の一種である2つの手法，</p>
 <ol class="simple">
@@ -839,8 +978,8 @@ v^*(s) &amp;= \max_{a \in \mathcal{A}} q^*(s,a)\\
 <li><p><strong>方策反復(Policy Iteration)</strong></p></li>
 </ol>
 <p>を紹介します．</p>
-<div class="section" id="id10">
-<h3><span class="section-number">3.3.1. </span>価値反復<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<section id="id10">
+<h3><span class="section-number">3.3.1. </span>価値反復<a class="headerlink" href="#id10" title="Permalink to this headline">#</a></h3>
 <p>この手法の基本的な方針は，</p>
 <ul class="simple">
 <li><p>式<a class="reference internal" href="#equation-bellman-opt-v">(3.7)</a>のベルマン最適方程式を解いて，</p></li>
@@ -971,9 +1110,9 @@ mu =
 <img alt="../_images/03bellman_21_0.png" src="../_images/03bellman_21_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="id11">
-<h3><span class="section-number">3.3.2. </span>方策反復<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="id11">
+<h3><span class="section-number">3.3.2. </span>方策反復<a class="headerlink" href="#id11" title="Permalink to this headline">#</a></h3>
 <p>この手法は，ベルマン最適方程式を直接解くのではなく，
 <a class="reference internal" href="#policy_improvement">Proposition 3.2</a>を用いて，
 任意の決定的な初期方策を改善して最適方策に近づいていく手法です．
@@ -1073,9 +1212,9 @@ mu =
 <img alt="../_images/03bellman_29_0.png" src="../_images/03bellman_29_0.png" />
 </div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -1099,9 +1238,11 @@ mu =
 
               </div>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
     <a class='left-prev' id="prev-link" href="02value_function.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -1117,24 +1258,28 @@ mu =
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-  <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Yukinari Hisaki<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
     
-      著者 Yukinari Hisaki<br/>
-    
-        &copy; Copyright 2021.<br/>
-  </p>
-</footer>
-</main>
+</div>
 
 
       </div>
     </div>
   
-  <script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>

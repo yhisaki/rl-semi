@@ -4,11 +4,13 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>&lt;no title&gt; &#8212; 強化学習新人ゼミ2022</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>5. DDPG &#8212; 強化学習新人ゼミ2022</title>
     
-  <link href="../_static/css/theme.css" rel="stylesheet">
-  <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,21 +20,17 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../_static/proof.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
-  <link rel="preload" as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -40,20 +38,25 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script src="../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="6. ニューラルネットワーク" href="02nn.html" />
+    <link rel="prev" title="4. Q-learning" href="../day1/04q-learning.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -61,7 +64,21 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -70,9 +87,10 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="../index.html">
       
       
@@ -82,17 +100,18 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
   <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="この本を検索..." aria-label="この本を検索..." autocomplete="off" >
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../intro.html">
-   はじめに
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    はじめに
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Day1
  </span>
@@ -113,123 +132,472 @@ const thebe_selector_output = ".output, .cell_output"
    3. ベルマン方程式
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../day1/04q-learning.html">
+   4. Q-learning
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Day2
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   5. DDPG
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02nn.html">
+   6. ニューラルネットワーク
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="03ddpg_implement.html">
+   7. DDPG の実装
+  </a>
+ </li>
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
             
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="ナビゲーションを切り替え" aria-controls="site-navigation"
-                title="ナビゲーションを切り替え" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="このページをダウンロード"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../_sources/day2/01ddpg.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="ソースファイルをダウンロード" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="PDFに印刷"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/executablebooks/jupyter-book"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="ソースリポジトリ"><i
-                    class="fab fa-github"></i>リポジトリ</button></a>
-        <a class="issues-button"
-            href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fday2/01ddpg.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="問題を開く"><i class="fas fa-lightbulb"></i>未解決の問題</button></a>
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="全画面モード"
-        title="全画面モード"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> 目次
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="simple visible nav section-nav flex-column">
-</ul>
-
-            </nav>
+            
         </div>
     </div>
+    <div id="rtd-footer-container"></div>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/executablebooks/jupyter-book"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fday2/01ddpg.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/day2/01ddpg.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   5.1. 概要
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   5.2. 行動価値関数の更新
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#target-network">
+   5.3. ターゲットネットワーク
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   5.4. 方策の更新
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ddpg-behavior-policy">
+   5.5. 行動方策
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id6">
+   5.6. まとめ
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1><no title></h1>
+                <h1>DDPG</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
                         <div>
-                            <h2> 目次 </h2>
+                            <h2> Contents </h2>
                         </div>
                         <nav aria-label="Page">
-                            <ul class="simple visible nav section-nav flex-column">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   5.1. 概要
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   5.2. 行動価値関数の更新
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#target-network">
+   5.3. ターゲットネットワーク
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   5.4. 方策の更新
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ddpg-behavior-policy">
+   5.5. 行動方策
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id6">
+   5.6. まとめ
+  </a>
+ </li>
 </ul>
 
                         </nav>
                     </div>
                 </div>
             </div>
-            
+            <main id="main-content" role="main">
+                
               <div>
                 
-  
+  <section class="tex2jax_ignore mathjax_ignore" id="ddpg">
+<h1><span class="section-number">5. </span>DDPG<a class="headerlink" href="#ddpg" title="Permalink to this headline">#</a></h1>
+<div class="math notranslate nohighlight">
+\[\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\E}{{\mathrm E}}
+\newcommand{\underE}[2]{\underset{\begin{subarray}{c}#1 \end{subarray}}{\E}\left[ #2 \right]}
+\newcommand{\Epi}[1]{\underset{\begin{subarray}{c}\tau \sim \pi \end{subarray}}{\E}\left[ #1 \right]}\]</div>
+<section id="id1">
+<h2><span class="section-number">5.1. </span>概要<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
+<p>前回は最適行動価値関数を推定することにより，最適方策を得る Q-learning を紹介しました．</p>
+<p>Q-learning は強化学習の基礎となるアルゴリズムの 1 つですが，
+現実の複雑なシステムに適用するには様々な課題があります．</p>
+<p>その課題の一つに，状態空間や行動空間が実数ベクトルである問題への適用が困難であることです．
+空間が離散的である場合は，
+行動価値関数などをベクトル形式で保持しておけますが，
+連続だと単純にベクトル形式には出来ません．
+連続な値を離散化することにより，
+ベクトル形式で関数を保存することが出来ますが，
+状態や行動の次元に伴い，
+ベクトルのサイズが指数的に増加してしまいます．</p>
+<p>この問題の解決法は関数近似を行うことです．
+いままでは行動価値関数<span class="math notranslate nohighlight">\(q: |\mathcal{S}| \times |\mathcal{A}| \rightarrow \mathbb{R}\)</span>を<span class="math notranslate nohighlight">\(q \in \mathbb{R}^{|\mathcal{S}| \times |\mathcal{A}|}\)</span>，
+方策(ここでは決定的方策)を<span class="math notranslate nohighlight">\(\mu: \mathcal{S} \rightarrow \mathcal{A}\)</span>を<span class="math notranslate nohighlight">\(\mu \in \mathcal{A}^{|\mathcal{S}|}\)</span>，
+という行列で捉えていたのに対して<span class="math notranslate nohighlight">\(q_\phi(s,a), \mu_\theta(s)\)</span>という，あるパラメータ<span class="math notranslate nohighlight">\(\phi,\theta\)</span>でパラメトライズされた関数として捉えます．
+そうすることにより，状態空間や行動空間が実数ベクトルである問題への対処が可能となります．</p>
+<p>しかし，関数近似を用いることにり，各行列の要素を更新する Q-learning のアルゴリズムを直接用いることは出来なくなってしまいます．その代わりに，最適行動価値関数<span class="math notranslate nohighlight">\(Q^*\)</span>や最適方策<span class="math notranslate nohighlight">\(\mu^*\)</span>をよく近似するようなパラメータ<span class="math notranslate nohighlight">\(\phi, \theta\)</span>を求めるアルゴリズムを考えなくてはなりません．</p>
+<p>本章では，ニューラルネットワークを用いた関数近似により，強化学習を行うアルゴリズムの一つである，<a class="reference external" href="https://arxiv.org/abs/1509.02971">DDPG</a>を紹介します．</p>
+</section>
+<section id="id2">
+<h2><span class="section-number">5.2. </span>行動価値関数の更新<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h2>
+<p>まず最初に，Q-learning と同様，
+以下の方程式を満たす関数<span class="math notranslate nohighlight">\(q_\phi\)</span>を見つけることを考えます．</p>
+<div class="math notranslate nohighlight">
+\[q_{\phi} = \Upsilon_*(q_{\phi}) = r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) \max_{a' \in \mathcal{A}} q_{\phi}(s',a') , \forall s \in \mathcal{S}, a \in \mathcal{A}\]</div>
+<p>しかし，これは以下の２つの点で不可能です．</p>
+<ol class="simple">
+<li><p>Q-learning と同様，環境の完全な情報を得ることが出来ないこと，</p></li>
+<li><p>この式を完全に満たす<span class="math notranslate nohighlight">\(\phi\)</span>が存在する保証が無いことです．</p></li>
+</ol>
+<p>特に 2 つ目に関して，この問題は，この式に限ったことではなく，
+パラメトライズされた関数にと作用素の間で当然発生する問題です．
+例えば関数<span class="math notranslate nohighlight">\(f_\phi(x) = \phi x\)</span>とし，作用素<span class="math notranslate nohighlight">\(T(f) = (f(x))^2 + 1\)</span>とします．
+そうすると<span class="math notranslate nohighlight">\(f = T(f)\)</span>は<span class="math notranslate nohighlight">\(\phi x = (\phi x)^2 + 1\)</span>となりますが，
+これを満たす定数パラメータ<span class="math notranslate nohighlight">\(\phi\)</span>は存在しません．
+<span class="math notranslate nohighlight">\(q_{\phi} = \Upsilon_*(q_{\phi})\)</span>という式に対しても，同様のことが言えます．</p>
+<p>そこで，求めるべきものを以下の評価関数を最小にする<span class="math notranslate nohighlight">\(\phi\)</span>だとします．</p>
+<div class="math notranslate nohighlight" id="equation-q-ideal-update">
+<span class="eqno">(5.1)<a class="headerlink" href="#equation-q-ideal-update" title="Permalink to this equation">#</a></span>\[
+L(\phi;\pi) = \underE{\pi}{\left( q_\phi(s,a) - \Upsilon_*(q_{\phi})(s,a) \right)^2}
+\]</div>
+<p>ここで<span class="math notranslate nohighlight">\(L(\phi;\pi)\)</span>は <strong>Mean Square Bellman Error; MEBE</strong> と呼ばれ，ある行動方策<span class="math notranslate nohighlight">\(\pi\)</span>上で得られる経験上での<span class="math notranslate nohighlight">\(q_\phi(s,a)\)</span>と<span class="math notranslate nohighlight">\(\Upsilon_*(q_{\phi_{t}})(s,a)\)</span>の平均二乗誤差を表しています．
+この更新により，<span class="math notranslate nohighlight">\(q = \Upsilon_*(q)\)</span>の解に近いパラメータを得ることができます．
+しかし，環境の完全な情報を得られないので，<span class="math notranslate nohighlight">\(\Upsilon_*(q_{\phi})(s,a)\)</span>に関して，実際に得られる経験<span class="math notranslate nohighlight">\((s,a,s',r)\)</span>から，</p>
+<div class="math notranslate nohighlight">
+\[
+\Upsilon_*(q_{\phi})(s,a) \simeq r + \gamma \max_{a'} q_{\phi}(s',a') = y(r,s')
+\]</div>
+<p>と近似します．
+また，ある行動方策<span class="math notranslate nohighlight">\(\pi\)</span>上で得られる経験という部分を，
+学習を開始してから現在までの全経験<span class="math notranslate nohighlight">\(\mathcal{D}\)</span>とすると，式<a class="reference internal" href="#equation-q-ideal-update">(5.1)</a>の更新は以下のように書き換えられます．</p>
+<div class="math notranslate nohighlight" id="equation-q-eval-func">
+<span class="eqno">(5.2)<a class="headerlink" href="#equation-q-eval-func" title="Permalink to this equation">#</a></span>\[
+L(\phi;\mathcal{D}) = \underE{(s,a,s',r) \sim \mathcal{D}}{\left( q_\phi(s,a) - y(r,s')\right)^2}
+\]</div>
+<p>ここで，学習を開始してから現在までの全経験<span class="math notranslate nohighlight">\(\mathcal{D}\)</span>を保存したバッファーは <strong>Replay Buffer</strong> と呼ばれます．
+ただし，実際の学習においては全経験では無く，Replay Bufferから一様ランダムにサンプルされた経験のミニバッチ<span class="math notranslate nohighlight">\(\mathcal{B}\)</span>が用いられます．
+また，一度の更新で式<a class="reference internal" href="#equation-q-eval-func">(5.2)</a>の最小値を求めることは困難であるため，
+実際には，勾配ベースの手法で<span class="math notranslate nohighlight">\(\phi_t\)</span>を1ステップ更新するのみとなります．</p>
+</section>
+<section id="target-network">
+<span id="id3"></span><h2><span class="section-number">5.3. </span>ターゲットネットワーク<a class="headerlink" href="#target-network" title="Permalink to this headline">#</a></h2>
+<p>式<a class="reference internal" href="#equation-q-eval-func">(5.2)</a>の最小化に関して</p>
+<div class="math notranslate nohighlight" id="equation-q-target">
+<span class="eqno">(5.3)<a class="headerlink" href="#equation-q-target" title="Permalink to this equation">#</a></span>\[y(r,s')=r + \gamma \max_{a'} q_{\phi}(s',a')\]</div>
+<p>はターゲットと呼ばれており，教師信号のような意味を持っています．
+しかし，ターゲットが最適化対象のパラメータである<span class="math notranslate nohighlight">\(\phi\)</span>に依存してしまっており，これは学習を不安定にしてしまいます．
+そこで，解決策として<span class="math notranslate nohighlight">\(y\)</span>の計算に関しては<span class="math notranslate nohighlight">\(\phi\)</span>ではなく，<span class="math notranslate nohighlight">\(\phi\)</span>より少し遅れたネットワーク<span class="math notranslate nohighlight">\(\phi_{\text targ}\)</span>を用います．</p>
+<p>DDPGでは，毎更新ステップにおいて，1に近いパラメータ<span class="math notranslate nohighlight">\(\rho\)</span>に対して</p>
+<div class="math notranslate nohighlight" id="equation-delay-update">
+<span class="eqno">(5.4)<a class="headerlink" href="#equation-delay-update" title="Permalink to this equation">#</a></span>\[
+\phi_{\text targ} \leftarrow \rho \phi_{\text targ} + (1 - \rho)\phi
+\]</div>
+<p>と更新することにより，<span class="math notranslate nohighlight">\(\phi\)</span>に近いけど少し遅れたネットワークというものを実現しています．</p>
+<p>これを用いて式<a class="reference internal" href="#equation-q-target">(5.3)</a>のターゲットは，</p>
+<div class="math notranslate nohighlight" id="equation-q-target2">
+<span class="eqno">(5.5)<a class="headerlink" href="#equation-q-target2" title="Permalink to this equation">#</a></span>\[y(r,s')=r + \gamma \max_{a'} q_{\phi_{\text targ}}(s',a')\]</div>
+<p>となります．</p>
+</section>
+<section id="id4">
+<h2><span class="section-number">5.4. </span>方策の更新<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h2>
+<p><span class="math notranslate nohighlight">\(q_\phi\)</span>の更新で<span class="math notranslate nohighlight">\(\max_{a} q_\phi(s,a)\)</span>を計算する際や，経験を集める行動方策を与える際，</p>
+<div class="math notranslate nohighlight">
+\[
+\mu(s) = \argmax_a q_\phi(s,a)
+\]</div>
+<p>を求めることが必要となります．</p>
+<p>しかし，<span class="math notranslate nohighlight">\(q\)</span>はニューラルネットワークで構成されており，
+各状態<span class="math notranslate nohighlight">\(s\)</span>に対して，このニューラルネットワークを最適化するのは現実的ではありません．</p>
+<p>そこで，方策を<span class="math notranslate nohighlight">\(\mu_\theta(s)\)</span>とニューラルネットワークを用いてパラメータ<span class="math notranslate nohighlight">\(\theta\)</span>でパラメトライズし，
+以下の関数を最大化します．</p>
+<div class="math notranslate nohighlight" id="equation-policy-eval-func">
+<span class="eqno">(5.6)<a class="headerlink" href="#equation-policy-eval-func" title="Permalink to this equation">#</a></span>\[
+\max_{\theta} \underE{s\sim\mathcal{D}}{q_\phi(s,\mu_\theta(s))}
+\]</div>
+<p>実際の更新に関しては<span class="math notranslate nohighlight">\(\phi\)</span>の更新と同様，ミニバッチ<span class="math notranslate nohighlight">\(\mathcal{B}\)</span>を用いて，勾配ベースの手法で<span class="math notranslate nohighlight">\(\theta\)</span>を1ステップ更新するのみとなります
+こうすることにより，<span class="math notranslate nohighlight">\(q_\phi\)</span>を最大化する方策<span class="math notranslate nohighlight">\(\mu_\theta\)</span>を近似的に得られます．</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(q\)</span>の更新における式<a class="reference internal" href="#equation-q-target2">(5.5)</a>のターゲットは<span class="math notranslate nohighlight">\(\mu_\theta\)</span>を用いて，</p>
+<div class="math notranslate nohighlight">
+\[y(r,s')=r + \gamma  q_{\phi_{\text targ}}(s',\mu_\theta(s'))\]</div>
+<p>と書けます．しかし，実際には方策のパラメータ<span class="math notranslate nohighlight">\(\theta\)</span>にもターゲットネットワーク<span class="math notranslate nohighlight">\(\theta_{\text targ}\)</span>が存在し，</p>
+<div class="math notranslate nohighlight">
+\[y(r,s')=r + \gamma q_{\phi_{\text targ}}(s',\mu_{\theta_{\text targ}}(s'))\]</div>
+<p>となります．<span class="math notranslate nohighlight">\(\theta_{\text targ}\)</span>は<span class="math notranslate nohighlight">\(\phi_{\text targ}\)</span>と同様，各更新ステップにおいて，</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_{\text targ} \leftarrow \rho \theta_{\text targ} + (1 - \rho)\theta
+\]</div>
+<p>と更新されます．</p>
+</div>
+</section>
+<section id="ddpg-behavior-policy">
+<span id="id5"></span><h2><span class="section-number">5.5. </span>行動方策<a class="headerlink" href="#ddpg-behavior-policy" title="Permalink to this headline">#</a></h2>
+<p>Q-learningと同様，行動方策には探索と活用のバランスが大事になります．
+Q-learningでは<span class="math notranslate nohighlight">\(\epsilon\)</span>-greedy法を使っていたのに対して，
+DDPGでは行動空間が連続なので<span class="math notranslate nohighlight">\(\mu(s)+\epsilon\)</span>とノイズを加算することにより，探索と活用のバランスをとります．
+DDPGの原論文では<a class="reference external" href="https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process">OU Noise</a>という特殊なノイズを使っているのですが，
+後の研究から普通のガウシアンノイズを用いても良いことがわかっている(<a class="reference external" href="https://spinningup.openai.com/en/latest/algorithms/ddpg.html#exploration-vs-exploitation">ここを参照</a>)らしいです．
+本書でも，ガウシアンノイズを用います．</p>
+</section>
+<section id="id6">
+<h2><span class="section-number">5.6. </span>まとめ<a class="headerlink" href="#id6" title="Permalink to this headline">#</a></h2>
+<p>以上より</p>
+<div class="proof algorithm admonition" id="ddpg">
+<p class="admonition-title"><span class="caption-number">Algorithm 5.1 </span> (DDPG)</p>
+<section class="algorithm-content" id="proof-content">
+<p><strong>Inputs</strong> <span class="math notranslate nohighlight">\(q,\mu\)</span>の初期パラメータ<span class="math notranslate nohighlight">\(\phi,\theta\)</span>，空のReplay Buffer<span class="math notranslate nohighlight">\(\mathcal{D}\)</span></p>
+<p>ターゲットネットワークを初期化 <span class="math notranslate nohighlight">\(\phi_{\text targ}\leftarrow \phi, \theta_{\text targ}\leftarrow \theta\)</span></p>
+<p><strong>while <em>still time to train</em>:</strong></p>
+<ol>
+<li><p>行動<span class="math notranslate nohighlight">\(A_t = \mu(s) + \epsilon, \ \epsilon \sim \mathcal{N}\)</span>を選択．</p></li>
+<li><p>行動<span class="math notranslate nohighlight">\(A_t\)</span>を実行して，経験<span class="math notranslate nohighlight">\((S_t,A_t,S_{t+1},R_t)\)</span>を得る．</p></li>
+<li><p><span class="math notranslate nohighlight">\((S_t,A_t,S_{t+1},R_t)\)</span>をReplay Buffer<span class="math notranslate nohighlight">\(\mathcal{D}\)</span>に蓄積</p></li>
+<li><p><strong>if</strong> 更新するのであれば，以下の処理を更新回数分繰り返す</p>
+<ol>
+<li><p>Replay Buffer <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>からミニバッチ<span class="math notranslate nohighlight">\(\mathcal{B}\)</span>を一様ランダムにサンプル</p></li>
+<li><p>ターゲットを計算</p>
+<div class="math notranslate nohighlight">
+\[y(r,s') = r + \gamma q_{\phi_{\text{targ}}}(s', \mu_{\theta_{\text{targ}}}(s'))\]</div>
+</li>
+<li><p><span class="math notranslate nohighlight">\(q\)</span>のパラメータ<span class="math notranslate nohighlight">\(\phi\)</span>を以下の勾配を用いて勾配法で1ステップ更新</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\phi} \frac{1}{|B|}\sum_{(s,a,r,s') \in B} \left( q_{\phi}(s,a) - y(r,s') \right)^2\]</div>
+</li>
+<li><p><span class="math notranslate nohighlight">\(\mu\)</span>のパラメータ<span class="math notranslate nohighlight">\(\theta\)</span>を以下の勾配を用いて勾配法で1ステップ更新</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\theta} \frac{1}{|B|}\sum_{s \in B}q_{\phi}(s, \mu_{\theta}(s))\]</div>
+</li>
+<li><p>ターゲットネットワークを更新</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\phi_{\text{targ}} &amp;\leftarrow \rho \phi_{\text{targ}} + (1-\rho) \phi \\
+            \theta_{\text{targ}} &amp;\leftarrow \rho \theta_{\text{targ}} + (1-\rho) \theta
+          \end{split}\]</div>
+</li>
+</ol>
+</li>
+</ol>
+</section>
+</div></section>
+</section>
+
     <script type="text/x-thebe-config">
     {
         requestKernel: true,
@@ -252,28 +620,48 @@ const thebe_selector_output = ".output, .cell_output"
 
               </div>
               
-            
-                <!-- Previous / next buttons -->
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../day1/04q-learning.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title"><span class="section-number">4. </span>Q-learning</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="02nn.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">6. </span>ニューラルネットワーク</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
-            
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-  <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Yukinari Hisaki<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
     
-      著者 Yukinari Hisaki<br/>
-    
-        &copy; Copyright 2021.<br/>
-  </p>
-</footer>
-</main>
+</div>
 
 
       </div>
     </div>
   
-  <script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>
