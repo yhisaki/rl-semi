@@ -160,6 +160,18 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
 </ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Appendix
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../recomended.html">
+   強化学習の勉強におすすめの資料
+  </a>
+ </li>
+</ul>
 
     </div>
 </nav></div>
@@ -435,7 +447,7 @@ title="Print to PDF"
 単層のニューラルネットワークの式を示します．</p>
 <div class="math notranslate nohighlight">
 \[
-y = g(xW+b),\ W \in \mathbb{R}^{n \times m}, b \in \mathbb{R}^{1 \times m}$
+y = g(xW+b),\ W \in \mathbb{R}^{n \times m}, b \in \mathbb{R}^{1 \times m}
 \]</div>
 <p>ここで関数<span class="math notranslate nohighlight">\(g:\mathbb{R} \rightarrow \mathbb{R}\)</span>は <strong>活性化関数</strong> と呼ばれる非線形関数であり，
 引数がベクトルや行列の際は各要素ごとに適用されます．</p>
@@ -443,7 +455,7 @@ y = g(xW+b),\ W \in \mathbb{R}^{n \times m}, b \in \mathbb{R}^{1 \times m}$
 <div class="math notranslate nohighlight">
 \[\begin{split}
 h = g^{(0)}(xW^{(0)}+b^{(0)}),\\
-y = g^{(1)}(xW^{(1)}+b^{(1)}).
+y = g^{(1)}(hW^{(1)}+b^{(1)}).
 \end{split}\]</div>
 <p>これらを繰り返すことにより，多層ニューラルネットワークを構成することが出来ます．
 多層ニューラルネットワークにおいては，
@@ -457,18 +469,19 @@ y = g^{(1)}(xW^{(1)}+b^{(1)}).
 <p>ニューラルネットワークで構成された関数<span class="math notranslate nohighlight">\(y=f(x;\omega)\)</span>を考えます．
 ここで<span class="math notranslate nohighlight">\(x\)</span>は入力で<span class="math notranslate nohighlight">\(y\)</span>は出力，<span class="math notranslate nohighlight">\(\omega\)</span>はパラメータを表します．
 このニューラルネットワークに対して，何かしらの損失関数というものを考えます．
-例えば，<span class="math notranslate nohighlight">\(y=f(x;\omega)\)</span>を<span class="math notranslate nohighlight">\(\mathcal{D} = \{(\hat{x}_0,\hat{y}_0),(\hat{x}_1,\hat{y}_1),\cdots,(\hat{x}_k,\hat{y}_k)\}\)</span>
+例えば，<span class="math notranslate nohighlight">\(y=f(x;\omega)\)</span>で<span class="math notranslate nohighlight">\(\mathcal{D} = \{(\hat{x}_0,\hat{y}_0),(\hat{x}_1,\hat{y}_1),\cdots,(\hat{x}_k,\hat{y}_k)\}\)</span>
 というデータを近似したいと考えると，以下のような損失関数を考えることが出来ます．</p>
-<div class="math notranslate nohighlight">
-\[
-L(\omega;\mathcal{D}) = \frac{1}{k} \sum_{n=0}^k \left( \hat{y}_n - f(\hat{x}_n;\omega) \right)^2
+<div class="math notranslate nohighlight" id="equation-nn-loss">
+<span class="eqno">(6.1)<a class="headerlink" href="#equation-nn-loss" title="Permalink to this equation">#</a></span>\[
+L(\omega;\mathcal{D}) = \frac{1}{|\mathcal{D}|} \sum_{n=0} \left( \hat{y}_n - f(\hat{x}_n;\omega) \right)^2
 \]</div>
 <p>また，損失関数のパラメータ<span class="math notranslate nohighlight">\(\omega\)</span>に対する勾配<span class="math notranslate nohighlight">\(\nabla_\omega L(\omega;\mathcal{D})\)</span>が分かれば，
 勾配ベースの手法により，この関数を最小化することができます．</p>
 <p>ここでは，詳細は説明しませんが，
 ニューラルネットワークフレームワークと呼ばれる，ニューラルネットワークを扱うプログラムの多くは，
-自動微分と呼ばれる，プログラムで構成された式に対する勾配を自動的に求めるツールを提供しています．
-また，それら勾配を用いて勾配ベースの手法により，
+<strong>自動微分(Automatic Differentiation)</strong> と呼ばれる機能を提供しています．
+これを用いるとプログラムで構成された式(例えば式<a class="reference internal" href="#equation-nn-loss">(6.1)</a>など)に対する勾配を自動的に計算できます．</p>
+<p>また，それら勾配を用いて勾配ベースの手法により，
 損失関数を最適化するツールも提供されています．</p>
 </section>
 <section id="id4">
@@ -482,8 +495,7 @@ L(\omega;\mathcal{D}) = \frac{1}{k} \sum_{n=0}^k \left( \hat{y}_n - f(\hat{x}_n;
 <p>という流れの実装を行っていきます．</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">torch</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">optim</span>
 <span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
@@ -492,23 +504,22 @@ L(\omega;\mathcal{D}) = \frac{1}{k} \sum_{n=0}^k \left( \hat{y}_n - f(\hat{x}_n;
 </div>
 </div>
 </div>
-<p>まずは，ニューラルネットワークを構成していきます．
-ここでは，入力/出力ともに1次元の，3層のニューラルネットワークを構成することとします．</p>
-<p>ここで用いるネットワークを式で表します．</p>
+<p>本節では，入力/出力ともに1次元の，3層のニューラルネットワークを構成してみます．
+ネットワークを式で表すと以下のようになります．</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 h^{(0)} &amp;= \text{ReLU}(xW^{(0)}+b^{(0)}),\\
 h^{(1)} &amp;= \text{ReLU}(h^{(0)}W^{(1)}+b^{(1)}),\\
 y &amp;= h^{(1)}W^{(2)}+b^{(2)}.
 \end{split}\]</div>
-<p>ここで各パラメータの次元は以下のようになります．</p>
+<p>各パラメータの次元は以下のようになります．</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 &amp;W^{(0)} \in \mathbb{R}^{1 \times 256}, b^{(0)} \in  \mathbb{R}^{256}, h^{(0)} \in \mathbb{R}^{256} \\
 &amp;W^{(0)} \in \mathbb{R}^{256 \times 256}, b^{(0)} \in  \mathbb{R}^{256}, h^{(0)} \in \mathbb{R}^{256} \\
 &amp;W^{(0)} \in \mathbb{R}^{256 \times 1}, b^{(0)} \in  \mathbb{R}^{1}, h^{(0)} \in \mathbb{R}^{1}
 \end{split}\]</div>
-<p><span class="math notranslate nohighlight">\(\text{ReLU}(\cdot)\)</span>は，以下の形状をした関数を表します．</p>
+<p>ここで，<span class="math notranslate nohighlight">\(\text{ReLU}(\cdot)\)</span>は，活性化関数であり，入力と出力の関係は以下グラフのようになります．</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
@@ -597,7 +608,7 @@ y &amp;= h^{(1)}W^{(2)}+b^{(2)}.
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 損失関数を計算</span>
-<span class="k">def</span> <span class="nf">compute_loss</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">compute_loss</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">Network</span><span class="p">):</span>
     <span class="c1"># yの予測値を計算</span>
     <span class="n">y_pred</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x_t</span><span class="p">)</span>
 
@@ -611,7 +622,7 @@ y &amp;= h^{(1)}W^{(2)}+b^{(2)}.
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor(0.5967, grad_fn=&lt;MseLossBackward0&gt;)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor(0.5223, grad_fn=&lt;MseLossBackward0&gt;)
 </pre></div>
 </div>
 </div>

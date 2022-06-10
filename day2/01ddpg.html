@@ -160,6 +160,18 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
 </ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Appendix
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../recomended.html">
+   強化学習の勉強におすすめの資料
+  </a>
+ </li>
+</ul>
 
     </div>
 </nav></div>
@@ -447,7 +459,7 @@ title="Print to PDF"
 状態や行動の次元に伴い，
 ベクトルのサイズが指数的に増加してしまいます．</p>
 <p>この問題の解決法は関数近似を行うことです．
-いままでは行動価値関数<span class="math notranslate nohighlight">\(q: |\mathcal{S}| \times |\mathcal{A}| \rightarrow \mathbb{R}\)</span>を<span class="math notranslate nohighlight">\(q \in \mathbb{R}^{|\mathcal{S}| \times |\mathcal{A}|}\)</span>，
+いままでは行動価値関数<span class="math notranslate nohighlight">\(q: \mathcal{S} \times \mathcal{A} \rightarrow \mathbb{R}\)</span>を<span class="math notranslate nohighlight">\(q \in \mathbb{R}^{|\mathcal{S}| \times |\mathcal{A}|}\)</span>，
 方策(ここでは決定的方策)を<span class="math notranslate nohighlight">\(\mu: \mathcal{S} \rightarrow \mathcal{A}\)</span>を<span class="math notranslate nohighlight">\(\mu \in \mathcal{A}^{|\mathcal{S}|}\)</span>，
 という行列で捉えていたのに対して<span class="math notranslate nohighlight">\(q_\phi(s,a), \mu_\theta(s)\)</span>という，あるパラメータ<span class="math notranslate nohighlight">\(\phi,\theta\)</span>でパラメトライズされた関数として捉えます．
 そうすることにより，状態空間や行動空間が実数ベクトルである問題への対処が可能となります．</p>
@@ -485,7 +497,7 @@ L(\phi;\pi) = \underE{\pi}{\left( q_\phi(s,a) - \Upsilon_*(q_{\phi})(s,a) \right
 \]</div>
 <p>と近似します．
 また，ある行動方策<span class="math notranslate nohighlight">\(\pi\)</span>上で得られる経験という部分を，
-学習を開始してから現在までの全経験<span class="math notranslate nohighlight">\(\mathcal{D}\)</span>とすると，式<a class="reference internal" href="#equation-q-ideal-update">(5.1)</a>の更新は以下のように書き換えられます．</p>
+学習を開始してから現在までの全経験<span class="math notranslate nohighlight">\(\mathcal{D} =\{(S_0, A_0, S_1, R_0), (S_1, A_1, S_2, R_1), \cdots\}\)</span>とすると，式<a class="reference internal" href="#equation-q-ideal-update">(5.1)</a>の更新は以下のように書き換えられます．</p>
 <div class="math notranslate nohighlight" id="equation-q-eval-func">
 <span class="eqno">(5.2)<a class="headerlink" href="#equation-q-eval-func" title="Permalink to this equation">#</a></span>\[
 L(\phi;\mathcal{D}) = \underE{(s,a,s',r) \sim \mathcal{D}}{\left( q_\phi(s,a) - y(r,s')\right)^2}
@@ -530,7 +542,8 @@ L(\phi;\mathcal{D}) = \underE{(s,a,s',r) \sim \mathcal{D}}{\left( q_\phi(s,a) - 
 <span class="eqno">(5.6)<a class="headerlink" href="#equation-policy-eval-func" title="Permalink to this equation">#</a></span>\[
 \max_{\theta} \underE{s\sim\mathcal{D}}{q_\phi(s,\mu_\theta(s))}
 \]</div>
-<p>実際の更新に関しては<span class="math notranslate nohighlight">\(\phi\)</span>の更新と同様，ミニバッチ<span class="math notranslate nohighlight">\(\mathcal{B}\)</span>を用いて，勾配ベースの手法で<span class="math notranslate nohighlight">\(\theta\)</span>を1ステップ更新するのみとなります
+<p>この関数を最大化することは，<span class="math notranslate nohighlight">\(q_\phi(s,a)\)</span>の値を出来るだけ大きくするような<span class="math notranslate nohighlight">\(a\)</span>を計算する<span class="math notranslate nohighlight">\(\mu_\theta(s)\)</span>を求めることを意味しています．
+実際の更新に関しては<span class="math notranslate nohighlight">\(\phi\)</span>の更新と同様，ミニバッチ<span class="math notranslate nohighlight">\(\mathcal{B}\)</span>を用いて，勾配ベースの手法で<span class="math notranslate nohighlight">\(\theta\)</span>を1ステップ更新するのみとなります
 こうすることにより，<span class="math notranslate nohighlight">\(q_\phi\)</span>を最大化する方策<span class="math notranslate nohighlight">\(\mu_\theta\)</span>を近似的に得られます．</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -538,9 +551,10 @@ L(\phi;\mathcal{D}) = \underE{(s,a,s',r) \sim \mathcal{D}}{\left( q_\phi(s,a) - 
 <div class="math notranslate nohighlight">
 \[y(r,s')=r + \gamma  q_{\phi_{\text targ}}(s',\mu_\theta(s'))\]</div>
 <p>と書けます．しかし，実際には方策のパラメータ<span class="math notranslate nohighlight">\(\theta\)</span>にもターゲットネットワーク<span class="math notranslate nohighlight">\(\theta_{\text targ}\)</span>が存在し，</p>
-<div class="math notranslate nohighlight">
-\[y(r,s')=r + \gamma q_{\phi_{\text targ}}(s',\mu_{\theta_{\text targ}}(s'))\]</div>
-<p>となります．<span class="math notranslate nohighlight">\(\theta_{\text targ}\)</span>は<span class="math notranslate nohighlight">\(\phi_{\text targ}\)</span>と同様，各更新ステップにおいて，</p>
+<div class="math notranslate nohighlight" id="equation-ddpg-target">
+<span class="eqno">(5.7)<a class="headerlink" href="#equation-ddpg-target" title="Permalink to this equation">#</a></span>\[y(r,s')=r + \gamma q_{\phi_{\text targ}}(s',\mu_{\theta_{\text targ}}(s'))\]</div>
+<p>となります．式<a class="reference internal" href="#equation-ddpg-target">(5.7)</a>がDDPGにおいて実際に使用されるターゲットの計算式となっています．
+<span class="math notranslate nohighlight">\(\theta_{\text targ}\)</span>は<span class="math notranslate nohighlight">\(\phi_{\text targ}\)</span>と同様，各更新ステップにおいて，</p>
 <div class="math notranslate nohighlight">
 \[
 \theta_{\text targ} \leftarrow \rho \theta_{\text targ} + (1 - \rho)\theta
@@ -559,7 +573,7 @@ DDPGの原論文では<a class="reference external" href="https://en.wikipedia.o
 </section>
 <section id="id6">
 <h2><span class="section-number">5.6. </span>まとめ<a class="headerlink" href="#id6" title="Permalink to this headline">#</a></h2>
-<p>以上より</p>
+<p>以上よりDDPG全体のアルゴリズムを<a class="reference internal" href="#ddpg">Algorithm 5.1</a>に示します．</p>
 <div class="proof algorithm admonition" id="ddpg">
 <p class="admonition-title"><span class="caption-number">Algorithm 5.1 </span> (DDPG)</p>
 <section class="algorithm-content" id="proof-content">
