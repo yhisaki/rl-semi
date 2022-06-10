@@ -19,3 +19,8 @@ parts:
       - file: day2/01ddpg.md
       - file: day2/02nn.ipynb
       - file: day2/03ddpg_implement.ipynb
+
+  - caption: Appendix
+    numbered: False
+    chapters:
+      - file: recomended.md

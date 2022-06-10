@@ -25,7 +25,7 @@ Q-learning は強化学習の基礎となるアルゴリズムの 1 つですが
 ベクトルのサイズが指数的に増加してしまいます．
 
 この問題の解決法は関数近似を行うことです．
-いままでは行動価値関数$q: |\mathcal{S}| \times |\mathcal{A}| \rightarrow \mathbb{R}$を$q \in \mathbb{R}^{|\mathcal{S}| \times |\mathcal{A}|}$，
+いままでは行動価値関数$q: \mathcal{S} \times \mathcal{A} \rightarrow \mathbb{R}$を$q \in \mathbb{R}^{|\mathcal{S}| \times |\mathcal{A}|}$，
 方策(ここでは決定的方策)を$\mu: \mathcal{S} \rightarrow \mathcal{A}$を$\mu \in \mathcal{A}^{|\mathcal{S}|}$，
 という行列で捉えていたのに対して$q_\phi(s,a), \mu_\theta(s)$という，あるパラメータ$\phi,\theta$でパラメトライズされた関数として捉えます．
 そうすることにより，状態空間や行動空間が実数ベクトルである問題への対処が可能となります．
@@ -69,7 +69,7 @@ $$
 
 と近似します．
 また，ある行動方策$\pi$上で得られる経験という部分を，
-学習を開始してから現在までの全経験$\mathcal{D}$とすると，式{eq}`q_ideal_update`の更新は以下のように書き換えられます．
+学習を開始してから現在までの全経験$\mathcal{D} =\{(S_0, A_0, S_1, R_0), (S_1, A_1, S_2, R_1), \cdots\}$とすると，式{eq}`q_ideal_update`の更新は以下のように書き換えられます．
 
 $$
 L(\phi;\mathcal{D}) = \underE{(s,a,s',r) \sim \mathcal{D}}{\left( q_\phi(s,a) - y(r,s')\right)^2}
@@ -125,6 +125,7 @@ $$
 \max_{\theta} \underE{s\sim\mathcal{D}}{q_\phi(s,\mu_\theta(s))}
 $$ (policy_eval_func)
 
+この関数を最大化することは，$q_\phi(s,a)$の値を出来るだけ大きくするような$a$を計算する$\mu_\theta(s)$を求めることを意味しています．
 実際の更新に関しては$\phi$の更新と同様，ミニバッチ$\mathcal{B}$を用いて，勾配ベースの手法で$\theta$を1ステップ更新するのみとなります
 こうすることにより，$q_\phi$を最大化する方策$\mu_\theta$を近似的に得られます．
 
@@ -135,9 +136,10 @@ $$y(r,s')=r + \gamma  q_{\phi_{\text targ}}(s',\mu_\theta(s'))$$
 
 と書けます．しかし，実際には方策のパラメータ$\theta$にもターゲットネットワーク$\theta_{\text targ}$が存在し，
 
-$$y(r,s')=r + \gamma q_{\phi_{\text targ}}(s',\mu_{\theta_{\text targ}}(s'))$$
+$$y(r,s')=r + \gamma q_{\phi_{\text targ}}(s',\mu_{\theta_{\text targ}}(s'))$$ (ddpg_target)
 
-となります．$\theta_{\text targ}$は$\phi_{\text targ}$と同様，各更新ステップにおいて，
+となります．式{eq}`ddpg_target`がDDPGにおいて実際に使用されるターゲットの計算式となっています．
+$\theta_{\text targ}$は$\phi_{\text targ}$と同様，各更新ステップにおいて，
 
 $$
 \theta_{\text targ} \leftarrow \rho \theta_{\text targ} + (1 - \rho)\theta
@@ -159,7 +161,7 @@ DDPGの原論文では[OU Noise](https://en.wikipedia.org/wiki/Ornstein%E2%80%93
 
 ## まとめ
 
-以上より
+以上よりDDPG全体のアルゴリズムを{prf:ref}`ddpg`に示します．
 
 ```{prf:algorithm} DDPG
 :label: ddpg
