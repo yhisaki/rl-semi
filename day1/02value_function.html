@@ -522,60 +522,10 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">error</span><span class="g g-Whitespace">                                     </span>Traceback (most recent call last)
-<span class="nn">Input In [1],</span> in <span class="ni">&lt;cell line: 13&gt;</span><span class="nt">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="s2">&quot;FrozenLake-v1&quot;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="n">desc</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SFFF&quot;</span><span class="p">,</span> <span class="s2">&quot;FHFH&quot;</span><span class="p">,</span> <span class="s2">&quot;FFFH&quot;</span><span class="p">,</span> <span class="s2">&quot;HFFG&quot;</span><span class="p">],</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="n">map_name</span><span class="o">=</span><span class="s2">&quot;4x4&quot;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">11</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="ne">---&gt; </span><span class="mi">13</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;rgb_array&#39;</span><span class="p">))</span>
-
-<span class="nn">File ~/workspace/rl-semi/.venv/lib/python3.8/site-packages/gym/core.py:343,</span> in <span class="ni">Wrapper.render</span><span class="nt">(self, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">341</span> <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">342</span>     <span class="sd">&quot;&quot;&quot;Renders the environment with kwargs.&quot;&quot;&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">343</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~/workspace/rl-semi/.venv/lib/python3.8/site-packages/gym/wrappers/order_enforcing.py:51,</span> in <span class="ni">OrderEnforcing.render</span><span class="nt">(self, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">46</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disable_render_order_enforcing</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_reset</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">47</span>     <span class="k">raise</span> <span class="n">ResetNeeded</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">48</span>         <span class="s2">&quot;Cannot call `env.render()` before calling `env.reset()`, if this is a intended action, &quot;</span>
-<span class="g g-Whitespace">     </span><span class="mi">49</span>         <span class="s2">&quot;set `disable_render_order_enforcing=True` on the OrderEnforcer wrapper.&quot;</span>
-<span class="g g-Whitespace">     </span><span class="mi">50</span>     <span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">51</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~/workspace/rl-semi/.venv/lib/python3.8/site-packages/gym/wrappers/env_checker.py:55,</span> in <span class="ni">PassiveEnvChecker.render</span><span class="nt">(self, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">53</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checked_render</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">54</span>     <span class="bp">self</span><span class="o">.</span><span class="n">checked_render</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="ne">---&gt; </span><span class="mi">55</span>     <span class="k">return</span> <span class="n">passive_env_render_check</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">56</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">57</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~/workspace/rl-semi/.venv/lib/python3.8/site-packages/gym/utils/passive_env_checker.py:310,</span> in <span class="ni">passive_env_render_check</span><span class="nt">(env, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">304</span> <span class="k">if</span> <span class="n">render_fps</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">305</span>     <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">306</span>         <span class="s2">&quot;No render fps was declared in the environment (env.metadata[&#39;render_fps&#39;] is None or not defined), &quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">307</span>         <span class="s2">&quot;rendering may occur at inconsistent fps&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">308</span>     <span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">310</span> <span class="k">return</span> <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~/workspace/rl-semi/.venv/lib/python3.8/site-packages/gym/envs/toy_text/frozen_lake.py:248,</span> in <span class="ni">FrozenLakeEnv.render</span><span class="nt">(self, mode)</span>
-<span class="g g-Whitespace">    </span><span class="mi">246</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_text</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">247</span> <span class="k">else</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">248</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_gui</span><span class="p">(</span><span class="n">desc</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
-
-<span class="nn">File ~/workspace/rl-semi/.venv/lib/python3.8/site-packages/gym/envs/toy_text/frozen_lake.py:260,</span> in <span class="ni">FrozenLakeEnv._render_gui</span><span class="nt">(self, desc, mode)</span>
-<span class="g g-Whitespace">    </span><span class="mi">258</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_surface</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">259</span>     <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
-<span class="ne">--&gt; </span><span class="mi">260</span>     <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">261</span>     <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;Frozen Lake&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">262</span>     <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;human&quot;</span><span class="p">:</span>
-
-<span class="ne">error</span>: No available video device
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f2e1454a5b0&gt;
 </pre></div>
 </div>
+<img alt="../_images/02value_function_2_1.png" src="../_images/02value_function_2_1.png" />
 </div>
 </div>
 <p>次に，各パラメータを設定します．
@@ -747,21 +697,21 @@ key が状態行動対<span class="math notranslate nohighlight">\((S_t = s,A_t 
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>q =
-[[0.00879326 0.00433521 0.01288201 0.00966315]
- [0.00539421 0.0111504  0.00582179 0.00521498]
- [0.0133604  0.01859533 0.01892844 0.        ]
- [0.01116972 0.01458681 0.         0.01398515]
- [0.01117291 0.00730217 0.00566324 0.00555855]
+[[0.0113218  0.00976559 0.01134671 0.00989718]
+ [0.00234006 0.00574303 0.00802316 0.00265157]
+ [0.01507976 0.01430332 0.         0.        ]
  [0.         0.         0.         0.        ]
- [0.         0.04312658 0.09278021 0.02161914]
+ [0.02059595 0.01316932 0.00990666 0.00569059]
  [0.         0.         0.         0.        ]
- [0.         0.01530218 0.02907016 0.0159675 ]
- [0.03864188 0.08005775 0.13375744 0.064421  ]
- [0.11387897 0.15652188 0.24667912 0.15386007]
+ [0.0820789  0.02452804 0.         0.        ]
+ [0.         0.         0.         0.        ]
+ [0.00803505 0.         0.02315713 0.06230488]
+ [0.02976596 0.06527687 0.11786534 0.04335188]
+ [0.2033137  0.03621077 0.23368317 0.        ]
  [0.         0.         0.         0.        ]
  [0.         0.         0.         0.        ]
- [0.0441045  0.13466702 0.06213769 0.19781035]
- [0.31848795 0.30943688 0.36460909 0.6568429 ]
+ [0.05106837 0.24197444 0.17465382 0.12129967]
+ [0.24585825 0.74320557 0.3725125  0.48226781]
  [0.         0.         0.         0.        ]]
 </pre></div>
 </div>
@@ -776,10 +726,10 @@ key が状態行動対<span class="math notranslate nohighlight">\((S_t = s,A_t 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.00891841, 0.00689534, 0.01272104, 0.00993542, 0.00742422,
-       0.        , 0.03938148, 0.        , 0.01508496, 0.07921952,
-       0.16773501, 0.        , 0.        , 0.10967989, 0.4123442 ,
-       0.        ])
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>v =
+[0.01058282 0.00468945 0.00734577 0.         0.01234063 0.
+ 0.02665173 0.         0.02337426 0.06406501 0.11830191 0.
+ 0.         0.14724907 0.46096103 0.        ]
 </pre></div>
 </div>
 </div>
