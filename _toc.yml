@@ -5,20 +5,20 @@ format: jb-book
 root: intro
 
 parts:
-  - caption: Day1
+  - caption: Part1
     numbered: True
     chapters:
-      - file: day1/01what_is_rl.ipynb
-      - file: day1/02value_function.ipynb
-      - file: day1/03bellman.ipynb
-      - file: day1/04q-learning.ipynb
+      - file: part1/01what_is_rl.ipynb
+      - file: part1/02value_function.ipynb
+      - file: part1/03bellman.ipynb
+      - file: part1/04q-learning.ipynb
 
-  - caption: Day2
+  - caption: Part2
     numbered: True
     chapters:
-      - file: day2/01ddpg.md
-      - file: day2/02nn.ipynb
-      - file: day2/03ddpg_implement.ipynb
+      - file: part2/01ddpg.md
+      - file: part2/02nn.ipynb
+      - file: part2/03ddpg_implement.ipynb
 
   - caption: Appendix
     numbered: False

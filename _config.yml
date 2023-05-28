@@ -1,7 +1,7 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: 強化学習新人ゼミ2022
+title: 強化学習 入門
 author: Yukinari Hisaki
 
 # Force re-execution of notebooks on each build.
