@@ -1,7 +1,7 @@
 jupyter-book
 matplotlib
 numpy
-gym
+gym==0.25.0
 gym-notebook-wrapper
 pygame
 torch

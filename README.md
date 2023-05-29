@@ -25,3 +25,7 @@
   ```bash
   jb build .
   ```
+
+## GitHub Pagesへのアップロード
+
+[ghp-import](https://jupyterbook.org/en/stable/publish/gh-pages.html#option-2-automatically-push-your-build-files-with-ghp-import)を用いてデプロイしている．
