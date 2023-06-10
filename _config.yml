@@ -33,6 +33,7 @@ html:
 
 exclude_patterns:
   - .venv/*
+  - README.md
 
 sphinx:
   extra_extensions:
