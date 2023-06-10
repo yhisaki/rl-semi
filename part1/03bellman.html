@@ -401,7 +401,7 @@ document.write(`
 様々な強化学習アルゴリズムで利用されています．</p>
 <section id="id2">
 <h2><span class="section-number">3.1. </span>ベルマン方程式<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
-<p>価値関数の定義式<code class="xref eq docutils literal notranslate"><span class="pre">vpi</span> <span class="pre">difinition</span></code>と<span class="math notranslate nohighlight">\(G_t\)</span>に関する再帰的な式<code class="xref eq docutils literal notranslate"><span class="pre">g_t</span> <span class="pre">recursion</span></code>より以下のような式変形が行えます．</p>
+<p>価値関数の定義式<a class="reference internal" href="02value_function.html#equation-vpi-definition">(2.1)</a>と<span class="math notranslate nohighlight">\(G_t\)</span>に関する再帰的な式<a class="reference internal" href="02value_function.html#equation-g-t-recursion">(2.4)</a>より以下のような式変形が行えます．</p>
 <div class="math notranslate nohighlight" id="equation-v-expansion">
 <span class="eqno">(3.1)<a class="headerlink" href="#equation-v-expansion" title="Permalink to this equation">#</a></span>\[\begin{split}
 V^\pi(s) &amp;= \underE{\pi}{G_t | S_t = s}\\
@@ -429,7 +429,7 @@ V^\pi(s) &amp;= \underE{\pi}{G_t | S_t = s}\\
 <p>これらの方程式の嬉しいところは，
 環境が既知であるならば，
 <font color='red'><span class="math notranslate nohighlight">\(V^\pi,Q^\pi\)</span>を求める問題を方程式<a class="reference internal" href="#equation-bellman-v">(3.3)</a>,<a class="reference internal" href="#equation-bellman-q">(3.4)</a>の解を求める問題と捉えることが出来る</font>ことです．</p>
-<p>また，式<code class="xref eq docutils literal notranslate"><span class="pre">vpi</span> <span class="pre">qpi</span> <span class="pre">relation</span></code>の結果と式<a class="reference internal" href="#equation-q-expansion">(3.2)</a>より</p>
+<p>また，式<a class="reference internal" href="02value_function.html#equation-vpi-qpi-relation">(2.3)</a>の結果と式<a class="reference internal" href="#equation-q-expansion">(3.2)</a>より</p>
 <div class="math notranslate nohighlight" id="equation-vpi-qpi-relation2">
 <span class="eqno">(3.5)<a class="headerlink" href="#equation-vpi-qpi-relation2" title="Permalink to this equation">#</a></span>\[\begin{split}Q^\pi(s,a) &amp;= r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) \sum_{a' \in \mathcal{A}} \pi(a'|s') Q^\pi(s', a')\\
 &amp; = r(s,a) + \gamma \sum_{s' \in \mathcal{S}} p(s'|s,a) V^\pi(s'), \forall s \in \mathcal{S}, a \in \mathcal{A}\end{split}\]</div>
@@ -491,7 +491,7 @@ V^\pi(s) &amp;= \underE{\pi}{G_t | S_t = s}\\
 <section id="id4">
 <h3><span class="section-number">3.1.2. </span>実装<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
 <p>本節では，前節のコンセプトを基にした手法の実装を示し，
-実際に<a class="reference external" href="https://www.gymlibrary.ml/environments/toy_text/frozen_lake/">FrozenLake</a>環境に適用してみます．</p>
+実際に<a class="reference external" href="https://www.gymlibrary.dev/environments/toy_text/frozen_lake/">FrozenLake</a>環境に適用してみます．</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gym</span>
@@ -521,7 +521,7 @@ V^\pi(s) &amp;= \underE{\pi}{G_t | S_t = s}\\
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f7414b62d70&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f00cd367160&gt;
 </pre></div>
 </div>
 <img alt="../_images/7b5a4d922aeddd15333431fc3630bd36407b535871070b09cf35e61a34dc6f86.png" src="../_images/7b5a4d922aeddd15333431fc3630bd36407b535871070b09cf35e61a34dc6f86.png" />
@@ -568,7 +568,7 @@ P_\pi = \left(
 <div class="math notranslate nohighlight" id="equation-bellman-eq-matrix-ver">
 <span class="eqno">(3.6)<a class="headerlink" href="#equation-bellman-eq-matrix-ver" title="Permalink to this equation">#</a></span>\[v = g + \gamma P_\pi v\]</div>
 <p>となり，一般的な行列計算として実装上でも扱いやすい形となります．</p>
-<p><a class="reference external" href="https://www.gymlibrary.ml/environments/toy_text/frozen_lake/">FrozenLake</a>環境において，行動を一様ランダムに選択，つまり<span class="math notranslate nohighlight">\(\pi(a|s) = \frac{1}{4}\)</span>とした場合の環境情報<span class="math notranslate nohighlight">\(g, P_\pi\)</span>を求めると以下のようになります．</p>
+<p><a class="reference external" href="https://www.gymlibrary.dev/environments/toy_text/frozen_lake/">FrozenLake</a>環境において，行動を一様ランダムに選択，つまり<span class="math notranslate nohighlight">\(\pi(a|s) = \frac{1}{4}\)</span>とした場合の環境情報<span class="math notranslate nohighlight">\(g, P_\pi\)</span>を求めると以下のようになります．</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -893,7 +893,7 @@ v^*(s) &amp;= \max_{a \in \mathcal{A}} q^*(s,a)\\
 まず最初のベルマン最適方程式の求解に関して，<a class="reference internal" href="#solve-bellman-operator"><span class="std std-ref">ベルマン方程式を解く手法</span></a>と同様，直接解くか，任意の関数に<span class="math notranslate nohighlight">\(B_*\)</span>を繰り返し適用するかの2通りの手法が考えられます．
 しかし，ベルマン最適作用素は単純な線形変換ではなく<span class="math notranslate nohighlight">\(\max_{a\in\mathcal{A}}\cdots\)</span>と，最大値をとる操作があるため，方程式は直接解けません．
 なので<span class="math notranslate nohighlight">\(B_*\)</span>を繰り返し適用する方針で解を求めていきます．</p>
-<p>それでは，価値反復を<a class="reference external" href="https://www.gymlibrary.ml/environments/toy_text/frozen_lake/">FrozenLake</a>に実装して見ましょう．</p>
+<p>それでは，価値反復を<a class="reference external" href="https://www.gymlibrary.dev/environments/toy_text/frozen_lake/">FrozenLake</a>に実装して見ましょう．</p>
 <p>まずは，ベルマン最適作用素を関数として実装します．</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1032,7 +1032,7 @@ mu =
 <li><p>それを用いて方策を改善する</p></li>
 </ol>
 <p>という２つの処理を繰り返します．</p>
-<p>先程と同様<a class="reference external" href="https://www.gymlibrary.ml/environments/toy_text/frozen_lake/">FrozenLake</a>に実装して見ましょう．</p>
+<p>先程と同様<a class="reference external" href="https://www.gymlibrary.dev/environments/toy_text/frozen_lake/">FrozenLake</a>に実装して見ましょう．</p>
 <p>まずは，方策(ここでは決定的方策<span class="math notranslate nohighlight">\(\mu\)</span>)に対してベルマン方程式を解く関数を実装します．ここでは，式<a class="reference internal" href="#equation-bellman-eq-matrix-ver">(3.6)</a>を直接解く方針で価値関数を求めます．</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">

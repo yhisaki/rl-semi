@@ -394,8 +394,8 @@ document.write(`
 <p>まずは，一般的に用いられる価値関数/行動価値関数の定義を確認します．</p>
 <ul>
 <li><p>価値関数(Value Function)</p>
-<div class="math notranslate nohighlight" id="equation-vpi-difinition">
-<span class="eqno">(2.1)<a class="headerlink" href="#equation-vpi-difinition" title="Permalink to this equation">#</a></span>\[V^\pi(s) = \underE{\pi}{G_t | S_t = s}\]</div>
+<div class="math notranslate nohighlight" id="equation-vpi-definition">
+<span class="eqno">(2.1)<a class="headerlink" href="#equation-vpi-definition" title="Permalink to this equation">#</a></span>\[V^\pi(s) = \underE{\pi}{G_t | S_t = s}\]</div>
 </li>
 <li><p>行動価値関数(Action Value Function)</p>
 <div class="math notranslate nohighlight" id="equation-qpi-definition">
@@ -420,7 +420,7 @@ document.write(`
 <p>実際にモンテカルロ法をシミュレーションに適用する様子を見ていきましょう．</p>
 <section id="id4">
 <h3><span class="section-number">2.2.1. </span>実験設定<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
-<p>環境として，OpenAI Gym の<a class="reference external" href="https://www.gymlibrary.ml/environments/toy_text/frozen_lake/">FrozenLake</a>を用います．
+<p>環境として，OpenAI Gym の<a class="reference external" href="https://www.gymlibrary.dev/environments/toy_text/frozen_lake/">FrozenLake</a>を用います．
 この環境では状態空間が各マスに対応した<span class="math notranslate nohighlight">\(\mathcal{S} = \{0,1,\cdots,15\}\)</span>，行動空間が進む向きに対応した<span class="math notranslate nohighlight">\(\mathcal{A} = \{0,1,2,3\}\)</span>となっており，スタート地点からLakeに落ちずにゴール地点にたどり着くことを目的としています．
 環境に関する設定は，ドキュメントを参照してください．</p>
 <div class="cell docutils container">
@@ -444,7 +444,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f7b9a1471c0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7ff0ddd5f5b0&gt;
 </pre></div>
 </div>
 <img alt="../_images/7b5a4d922aeddd15333431fc3630bd36407b535871070b09cf35e61a34dc6f86.png" src="../_images/7b5a4d922aeddd15333431fc3630bd36407b535871070b09cf35e61a34dc6f86.png" />
@@ -534,7 +534,7 @@ document.write(`
 <section id="id6">
 <h3><span class="section-number">2.2.3. </span>行動価値の推定<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
 <p>FrozenLake 環境におけるランダム方策の行動価値関数を推定していきます．
-価値関数に関しては式<code class="xref eq docutils literal notranslate"><span class="pre">vpi</span> <span class="pre">qpi</span> <span class="pre">relation</span></code>より，</p>
+価値関数に関しては式<a class="reference internal" href="#equation-vpi-qpi-relation">(2.3)</a>より，</p>
 <div class="math notranslate nohighlight">
 \[V^\pi(s) = \underE{a \sim \pi}{Q^\pi(s, a)} = \sum_{a \in \mathcal{A}} \pi(a|s) Q^\pi(s,a) = \sum_{a \in \{0,1,2,3\}} \frac{1}{4} Q^\pi(s,a)\]</div>
 <p>とすれば良いので，ここでは行動価値関数のみを推定します．</p>
@@ -594,7 +594,7 @@ key が状態行動対<span class="math notranslate nohighlight">\((S_t = s,A_t 
 <div class="math notranslate nohighlight" id="equation-g-t-recursion">
 <span class="eqno">(2.4)<a class="headerlink" href="#equation-g-t-recursion" title="Permalink to this equation">#</a></span>\[G_{t} = R_t + \gamma G_{t+1}\]</div>
 <p>のような時間方向後ろ向きに再帰的な関係関係を満たすため，これを利用し<span class="math notranslate nohighlight">\(G_{t}\)</span>を求めます．</p>
-<p><span class="math notranslate nohighlight">\(Q(s,a)\)</span>は定義式<code class="xref eq docutils literal notranslate"><span class="pre">qpi</span> <span class="pre">definition</span></code>から<code class="docutils literal notranslate"><span class="pre">returns[state,</span> <span class="pre">action]</span> <span class="pre">=</span> <span class="pre">[G0,</span> <span class="pre">G1,</span> <span class="pre">...]</span></code>の平均値をとって推定します．</p>
+<p><span class="math notranslate nohighlight">\(Q(s,a)\)</span>は定義式<a class="reference internal" href="#equation-qpi-definition">(2.2)</a>から<code class="docutils literal notranslate"><span class="pre">returns[state,</span> <span class="pre">action]</span> <span class="pre">=</span> <span class="pre">[G0,</span> <span class="pre">G1,</span> <span class="pre">...]</span></code>の平均値をとって推定します．</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
@@ -625,21 +625,21 @@ key が状態行動対<span class="math notranslate nohighlight">\((S_t = s,A_t 
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>q =
-[[0.0074791  0.00687875 0.00971351 0.00458622]
- [0.00318111 0.00587318 0.01624363 0.00655855]
- [0.00799151 0.02591871 0.         0.01268051]
- [0.         0.01463062 0.         0.        ]
- [0.01210178 0.01630769 0.         0.00288179]
+[[0.00624127 0.00918482 0.00442237 0.01051345]
+ [0.00540456 0.00834534 0.00285892 0.        ]
+ [0.0059296  0.01188978 0.02804143 0.        ]
  [0.         0.         0.         0.        ]
- [0.02043821 0.05408882 0.02041875 0.        ]
+ [0.02233428 0.00866768 0.00938467 0.00522485]
  [0.         0.         0.         0.        ]
- [0.         0.03134063 0.03362341 0.04381257]
- [0.08647984 0.08458902 0.         0.019602  ]
- [0.11423077 0.         0.09801495 0.        ]
+ [0.0190198  0.03379655 0.         0.        ]
+ [0.         0.         0.         0.        ]
+ [0.00970598 0.04450725 0.02454856 0.04828594]
+ [0.0176418  0.         0.11761794 0.09854001]
+ [0.15041904 0.12344062 0.03345859 0.06592342]
  [0.         0.         0.         0.        ]
  [0.         0.         0.         0.        ]
- [0.05158421 0.16335825 0.0495     0.26137973]
- [0.15230769 0.38155385 0.38722778 0.33135327]
+ [0.         0.21072857 0.15230769 0.        ]
+ [0.20686311 0.33333333 0.26666667 0.23412353]
  [0.         0.         0.         0.        ]]
 </pre></div>
 </div>
@@ -655,9 +655,9 @@ key が状態行動対<span class="math notranslate nohighlight">\((S_t = s,A_t 
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>v =
-[0.0071644  0.00796412 0.01164768 0.00365765 0.00782281 0.
- 0.02373644 0.         0.02719415 0.04766772 0.05306143 0.
- 0.         0.13145555 0.31311065 0.        ]
+[0.00759048 0.0041522  0.0114652  0.         0.01140287 0.
+ 0.01320409 0.         0.03176193 0.05844994 0.09331042 0.
+ 0.         0.09075907 0.26024666 0.        ]
 </pre></div>
 </div>
 </div>
